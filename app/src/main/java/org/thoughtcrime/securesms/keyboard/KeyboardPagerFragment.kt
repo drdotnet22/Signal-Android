@@ -50,8 +50,6 @@ class KeyboardPagerFragment : Fragment(), InputAwareConstraintLayout.InputFragme
     }
 
     emojiButton.setOnClickListener { viewModel.switchToPage(KeyboardPage.EMOJI) }
-    stickerButton.setOnClickListener { viewModel.switchToPage(KeyboardPage.STICKER) }
-    gifButton.setOnClickListener { viewModel.switchToPage(KeyboardPage.GIF) }
 
     onHiddenChanged(false)
   }
