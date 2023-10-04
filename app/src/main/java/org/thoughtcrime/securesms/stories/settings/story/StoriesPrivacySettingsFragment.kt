@@ -130,7 +130,7 @@ class StoriesPrivacySettingsFragment :
           title = DSLSettingsText.from(R.string.StoriesPrivacySettingsFragment__turn_on_stories),
           summary = DSLSettingsText.from(R.string.StoriesPrivacySettingsFragment__share_and_view),
           onClick = {
-            viewModel.setStoriesEnabled(true)
+            viewModel.setStoriesEnabled(false)
           }
         )
       }

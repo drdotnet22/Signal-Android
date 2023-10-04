@@ -1673,9 +1673,6 @@ class ConversationFragment :
   }
 
   private fun initializeStickerSuggestions() {
-    stickerViewModel.stickers
-      .subscribeBy(onNext = inputPanel::setStickerSuggestions)
-      .addTo(disposables)
   }
 
   private fun updateLinkPreviewState() {

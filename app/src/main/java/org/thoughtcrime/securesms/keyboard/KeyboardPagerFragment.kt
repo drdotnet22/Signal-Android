@@ -45,8 +45,8 @@ class KeyboardPagerFragment : Fragment(), InputAwareConstraintLayout.InputFragme
     viewModel.page().observe(viewLifecycleOwner, this::onPageSelected)
     viewModel.pages().observe(viewLifecycleOwner) { pages ->
       emojiButton.visible = pages.contains(KeyboardPage.EMOJI) && pages.size > 1
-      stickerButton.visible = pages.contains(KeyboardPage.STICKER) && pages.size > 1
-      gifButton.visible = pages.contains(KeyboardPage.GIF) && pages.size > 1
+      stickerButton.visible = false
+      gifButton.visible = false
     }
 
     emojiButton.setOnClickListener { viewModel.switchToPage(KeyboardPage.EMOJI) }
