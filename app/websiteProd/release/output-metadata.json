@@ -1,0 +1,72 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.thoughtcrime.securesms",
+  "variantName": "websiteProdRelease",
+  "elements": [
+    {
+      "type": "UNIVERSAL",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 133800,
+      "versionName": "6.35.0",
+      "outputFile": "Signal-Android-website-prod-universal-release-6.35.0.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "arm64-v8a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 133802,
+      "versionName": "6.35.0",
+      "outputFile": "Signal-Android-website-prod-arm64-v8a-release-6.35.0.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "armeabi-v7a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 133801,
+      "versionName": "6.35.0",
+      "outputFile": "Signal-Android-website-prod-armeabi-v7a-release-6.35.0.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 133803,
+      "versionName": "6.35.0",
+      "outputFile": "Signal-Android-website-prod-x86-release-6.35.0.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86_64"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 133804,
+      "versionName": "6.35.0",
+      "outputFile": "Signal-Android-website-prod-x86_64-release-6.35.0.apk"
+    }
+  ],
+  "elementType": "File"
+}
