@@ -11,10 +11,8 @@ import org.thoughtcrime.securesms.jobs.RetrieveProfileJob;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.util.FeatureFlags;
 import org.whispersystems.signalservice.api.push.ServiceId.ACI;
 import org.whispersystems.signalservice.api.push.ServiceId.PNI;
-import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.storage.SignalContactRecord;
 import org.whispersystems.signalservice.api.util.OptionalUtil;
 import org.whispersystems.signalservice.internal.storage.protos.ContactRecord.IdentityState;
@@ -305,7 +303,7 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
 
   private static boolean doParamsMatch(@NonNull SignalContactRecord contact,
                                        @Nullable byte[] unknownFields,
-                                       @NonNull ACI aci,
+                                       @Nullable ACI aci,
                                        @Nullable PNI pni,
                                        @Nullable String e164,
                                        @NonNull String profileGivenName,
