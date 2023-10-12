@@ -4,7 +4,6 @@
  */
 package org.thoughtcrime.securesms.components.transfercontrols
 
-import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
@@ -23,6 +22,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.attachments.Attachment
+import org.thoughtcrime.securesms.components.RecyclerViewParentTransitionController
 import org.thoughtcrime.securesms.database.AttachmentTable
 import org.thoughtcrime.securesms.databinding.TransferControlsViewBinding
 import org.thoughtcrime.securesms.events.PartProgressEvent
@@ -45,10 +45,11 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     binding = TransferControlsViewBinding.inflate(LayoutInflater.from(context), this)
     visibility = GONE
     isLongClickable = false
-    layoutTransition = LayoutTransition()
     disposables += store.stateFlowable.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread()).subscribe {
       applyState(it)
     }
+
+    addOnAttachStateChangeListener(RecyclerViewParentTransitionController(child = this))
   }
 
   override fun onAttachedToWindow() {
@@ -95,34 +96,56 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
         val slide = currentState.slides.first()
         if (slide.hasVideo()) {
           if (currentState.isOutgoing) {
-            return if (slide.transferState == AttachmentTable.TRANSFER_PROGRESS_STARTED) {
-              Mode.UPLOADING_SINGLE_ITEM
-            } else {
-              Mode.RETRY_UPLOADING
+            return when (slide.transferState) {
+              AttachmentTable.TRANSFER_PROGRESS_STARTED -> {
+                Mode.UPLOADING_SINGLE_ITEM
+              }
+
+              AttachmentTable.TRANSFER_PROGRESS_PENDING -> {
+                Mode.PENDING_SINGLE_ITEM
+              }
+
+              else -> {
+                Mode.RETRY_UPLOADING
+              }
             }
           } else {
-            return if (slide.transferState == AttachmentTable.TRANSFER_PROGRESS_STARTED) {
-              if (currentState.playableWhileDownloading) {
-                Mode.DOWNLOADING_VIDEO_PLAYABLE
-              } else {
-                Mode.DOWNLOADING_SINGLE_ITEM
+            return when (slide.transferState) {
+              AttachmentTable.TRANSFER_PROGRESS_STARTED -> {
+                if (currentState.playableWhileDownloading) {
+                  Mode.DOWNLOADING_VIDEO_PLAYABLE
+                } else {
+                  Mode.DOWNLOADING_SINGLE_ITEM
+                }
               }
-            } else if (slide.transferState == AttachmentTable.TRANSFER_PROGRESS_FAILED) {
-              Mode.RETRY_DOWNLOADING
-            } else {
-              if (currentState.playableWhileDownloading) {
-                Mode.PENDING_VIDEO_PLAYABLE
-              } else {
-                Mode.PENDING_SINGLE_ITEM
+
+              AttachmentTable.TRANSFER_PROGRESS_FAILED -> {
+                Mode.RETRY_DOWNLOADING
+              }
+
+              else -> {
+                if (currentState.playableWhileDownloading) {
+                  Mode.PENDING_VIDEO_PLAYABLE
+                } else {
+                  Mode.PENDING_SINGLE_ITEM
+                }
               }
             }
           }
         } else {
           return if (currentState.isOutgoing) {
-            if (slide.transferState == AttachmentTable.TRANSFER_PROGRESS_STARTED) {
-              Mode.UPLOADING_SINGLE_ITEM
-            } else {
-              Mode.RETRY_UPLOADING
+            when (slide.transferState) {
+              AttachmentTable.TRANSFER_PROGRESS_FAILED -> {
+                Mode.RETRY_UPLOADING
+              }
+
+              AttachmentTable.TRANSFER_PROGRESS_PENDING -> {
+                Mode.PENDING_SINGLE_ITEM
+              }
+
+              else -> {
+                Mode.UPLOADING_SINGLE_ITEM
+              }
             }
           } else {
             return when (slide.transferState) {
@@ -194,9 +217,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     binding.primaryDetailsText.text = context.resources.getQuantityString(R.plurals.TransferControlView_n_items, downloadCount, downloadCount)
     val byteCount = remainingSlides.sumOf { it.asAttachment().size }
     binding.secondaryDetailsText.text = Formatter.formatShortFileSize(context, byteCount)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayPendingGalleryWithPlayable(currentState: TransferControlViewState) {
@@ -218,9 +238,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
 
     val byteCount = currentState.slides.sumOf { it.asAttachment().size }
     binding.secondaryDetailsText.text = Formatter.formatShortFileSize(context, byteCount)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayPendingSingleItem(currentState: TransferControlViewState) {
@@ -235,9 +252,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     )
     val byteCount = currentState.slides.sumOf { it.asAttachment().size }
     binding.secondaryDetailsText.text = Formatter.formatShortFileSize(context, byteCount)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayPendingPlayableVideo(currentState: TransferControlViewState) {
@@ -253,9 +267,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     )
     val byteCount = currentState.slides.sumOf { it.asAttachment().size }
     binding.secondaryDetailsText.text = Formatter.formatShortFileSize(context, byteCount)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayDownloadingGallery(currentState: TransferControlViewState) {
@@ -276,9 +287,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     binding.secondaryDetailsText.text = deriveSecondaryDetailsText(currentState)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayDownloadingSingleItem(currentState: TransferControlViewState) {
@@ -299,9 +307,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     binding.secondaryDetailsText.text = deriveSecondaryDetailsText(currentState)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayDownloadingPlayableVideo(currentState: TransferControlViewState) {
@@ -322,9 +327,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
       binding.secondaryProgressView.setDownloading(progress)
     }
     binding.secondaryDetailsText.text = deriveSecondaryDetailsText(currentState)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayUploadingSingleItem(currentState: TransferControlViewState) {
@@ -341,8 +343,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     binding.secondaryProgressView.setUploading(progress)
 
     binding.secondaryDetailsText.text = deriveSecondaryDetailsText(currentState)
-    binding.secondaryDetailsText.invalidate()
-    requestLayout()
   }
 
   private fun displayUploadingGallery(currentState: TransferControlViewState) {
@@ -358,9 +358,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
     binding.secondaryProgressView.setUploading(progress)
 
     binding.secondaryDetailsText.text = deriveSecondaryDetailsText(currentState)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayRetry(currentState: TransferControlViewState, isUploading: Boolean) {
@@ -375,9 +372,6 @@ class TransferControlView @JvmOverloads constructor(context: Context, attrs: Att
 
     binding.secondaryProgressView.setStopped(isUploading)
     binding.secondaryDetailsText.text = resources.getString(R.string.NetworkFailure__retry)
-    binding.secondaryDetailsText.invalidate()
-    binding.secondaryDetailsText.forceLayout()
-    requestLayout()
   }
 
   private fun displayChildrenAsGone(currentState: TransferControlViewState, prevState: TransferControlViewState) {
