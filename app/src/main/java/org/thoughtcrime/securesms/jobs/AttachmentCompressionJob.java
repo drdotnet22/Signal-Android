@@ -31,7 +31,7 @@ import org.thoughtcrime.securesms.mms.MediaConstraints;
 import org.thoughtcrime.securesms.mms.MediaStream;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.SentMediaQuality;
-import org.thoughtcrime.securesms.service.NotificationController;
+import org.thoughtcrime.securesms.service.AttachmentProgressService;
 import org.thoughtcrime.securesms.transport.UndeliverableMessageException;
 import org.thoughtcrime.securesms.util.BitmapDecodingException;
 import org.thoughtcrime.securesms.util.FeatureFlags;
@@ -174,10 +174,10 @@ public final class AttachmentCompressionJob extends BaseJob {
         try (MediaStream converted = compressImage(context, attachment, constraints)) {
           attachmentDatabase.updateAttachmentData(attachment, converted, false);
         }
-        attachmentDatabase.markAttachmentAsTransformed(attachmentId);
+        attachmentDatabase.markAttachmentAsTransformed(attachmentId, false);
       } else if (constraints.isSatisfied(context, attachment)) {
         Log.i(TAG, "Not compressing.");
-        attachmentDatabase.markAttachmentAsTransformed(attachmentId);
+        attachmentDatabase.markAttachmentAsTransformed(attachmentId, false);
       } else {
         throw new UndeliverableMessageException("Size constraints could not be met!");
       }
@@ -205,9 +205,10 @@ public final class AttachmentCompressionJob extends BaseJob {
       return attachment;
     }
 
-    try (NotificationController notification = ForegroundServiceUtil.startGenericTaskWhenCapable(context, context.getString(R.string.AttachmentUploadJob_compressing_video_start))) {
-
-      notification.setIndeterminateProgress();
+    try (AttachmentProgressService.Controller notification = AttachmentProgressService.start(context, context.getString(R.string.AttachmentUploadJob_compressing_video_start))) {
+      if (notification != null) {
+        notification.setIndeterminate(true);
+      }
 
       try (MediaDataSource dataSource = attachmentDatabase.mediaDataSourceFor(attachment.getAttachmentId(), false)) {
         if (dataSource == null) {
@@ -220,7 +221,7 @@ public final class AttachmentCompressionJob extends BaseJob {
           options = new TranscoderOptions(transformProperties.getVideoTrimStartTimeUs(), transformProperties.getVideoTrimEndTimeUs());
         }
 
-        if (FeatureFlags.useStreamingVideoMuxer() || !MemoryFileDescriptor.supported()) {
+        if (FeatureFlags.useStreamingVideoMuxer()) {
           StreamingTranscoder transcoder = new StreamingTranscoder(dataSource, options, constraints.getCompressedVideoMaxSize(context));
 
           if (transcoder.isTranscodeRequired()) {
@@ -233,7 +234,9 @@ public final class AttachmentCompressionJob extends BaseJob {
             try {
               try (OutputStream outputStream = ModernEncryptingPartOutputStream.createFor(attachmentSecret, file, true).second) {
                 transcoder.transcode(percent -> {
-                  notification.setProgress(100, percent);
+                  if (notification != null) {
+                    notification.setProgress(percent / 100f);
+                  }
                   eventBus.postSticky(new PartProgressEvent(attachment,
                                                             PartProgressEvent.Type.COMPRESSION,
                                                             100,
@@ -250,7 +253,7 @@ public final class AttachmentCompressionJob extends BaseJob {
               }
             }
 
-            attachmentDatabase.markAttachmentAsTransformed(attachment.getAttachmentId());
+            attachmentDatabase.markAttachmentAsTransformed(attachment.getAttachmentId(), false);
 
             return Objects.requireNonNull(attachmentDatabase.getAttachment(attachment.getAttachmentId()));
           } else {
@@ -262,7 +265,9 @@ public final class AttachmentCompressionJob extends BaseJob {
               Log.i(TAG, "Compressing with android in-memory muxer");
 
               try (MediaStream mediaStream = transcoder.transcode(percent -> {
-                notification.setProgress(100, percent);
+                if (notification != null) {
+                  notification.setProgress(percent / 100f);
+                }
                 eventBus.postSticky(new PartProgressEvent(attachment,
                                                           PartProgressEvent.Type.COMPRESSION,
                                                           100,
@@ -271,8 +276,11 @@ public final class AttachmentCompressionJob extends BaseJob {
                 attachmentDatabase.updateAttachmentData(attachment, mediaStream, true);
               }
 
-              attachmentDatabase.markAttachmentAsTransformed(attachment.getAttachmentId());
-
+              attachmentDatabase.markAttachmentAsTransformed(attachment.getAttachmentId(), true);
+              eventBus.postSticky(new PartProgressEvent(attachment,
+                                                        PartProgressEvent.Type.COMPRESSION,
+                                                        100,
+                                                        100));
               return Objects.requireNonNull(attachmentDatabase.getAttachment(attachment.getAttachmentId()));
             } else {
               Log.i(TAG, "Transcode was not required (in-memory transcoder)");
@@ -290,7 +298,7 @@ public final class AttachmentCompressionJob extends BaseJob {
           throw new UndeliverableMessageException("Failed to transcode and cannot skip due to editing", e);
         }
       }
-    } catch (UnableToStartException | IOException | MmsException e) {
+    } catch (IOException | MmsException e) {
       throw new UndeliverableMessageException("Failed to transcode", e);
     }
     return attachment;

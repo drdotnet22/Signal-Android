@@ -8,6 +8,7 @@ package org.thoughtcrime.securesms.components.settings.app.subscription.donate.t
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import org.thoughtcrime.securesms.components.settings.app.subscription.donate.transfer.details.BankTransferDetailsState.FocusState
 
 class BankTransferDetailsViewModel : ViewModel() {
 
@@ -18,16 +19,42 @@ class BankTransferDetailsViewModel : ViewModel() {
   private val internalState = mutableStateOf(BankTransferDetailsState())
   val state: State<BankTransferDetailsState> = internalState
 
+  fun setDisplayFindAccountInfoSheet(displayFindAccountInfoSheet: Boolean) {
+    internalState.value = internalState.value.copy(
+      displayFindAccountInfoSheet = displayFindAccountInfoSheet
+    )
+  }
+
   fun onNameChanged(name: String) {
     internalState.value = internalState.value.copy(
       name = name
     )
   }
 
-  fun onIBANFocusChanged(isFocused: Boolean) {
-    internalState.value = internalState.value.copy(
-      ibanValidity = IBANValidator.validate(internalState.value.iban, isFocused)
-    )
+  fun onFocusChanged(field: Field, isFocused: Boolean) {
+    when (field) {
+      Field.IBAN -> {
+        internalState.value = internalState.value.copy(
+          ibanValidity = IBANValidator.validate(internalState.value.iban, isFocused)
+        )
+      }
+
+      Field.NAME -> {
+        if (isFocused && internalState.value.nameFocusState == FocusState.NOT_FOCUSED) {
+          internalState.value = internalState.value.copy(nameFocusState = FocusState.FOCUSED)
+        } else if (!isFocused && internalState.value.nameFocusState == FocusState.FOCUSED) {
+          internalState.value = internalState.value.copy(nameFocusState = FocusState.LOST_FOCUS)
+        }
+      }
+
+      Field.EMAIL -> {
+        if (isFocused && internalState.value.emailFocusState == FocusState.NOT_FOCUSED) {
+          internalState.value = internalState.value.copy(emailFocusState = FocusState.FOCUSED)
+        } else if (!isFocused && internalState.value.emailFocusState == FocusState.FOCUSED) {
+          internalState.value = internalState.value.copy(emailFocusState = FocusState.LOST_FOCUS)
+        }
+      }
+    }
   }
 
   fun onIBANChanged(iban: String) {
@@ -41,5 +68,11 @@ class BankTransferDetailsViewModel : ViewModel() {
     internalState.value = internalState.value.copy(
       email = email
     )
+  }
+
+  enum class Field {
+    IBAN,
+    NAME,
+    EMAIL
   }
 }

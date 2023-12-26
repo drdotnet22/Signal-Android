@@ -219,7 +219,7 @@ public final class SignalCallManager implements CallManager.Observer, GroupCall.
    * @param transformer The transformation to apply to the state. Runs on the {@link #serviceExecutor}.
    */
   @AnyThread
-private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEphemeralState> transformer) {
+  private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEphemeralState> transformer) {
     ephemeralStateStore.update(transformer);
   }
 
@@ -293,6 +293,10 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
 
   public void screenOff() {
     process((s, p) -> p.handleScreenOffChange(s));
+  }
+
+  public void react(@NonNull String reaction) {
+    processStateless(s -> serviceState.getActionProcessor().handleSendGroupReact(serviceState, s, reaction));
   }
 
   public void postStateUpdate(@NonNull WebRtcServiceState state) {
@@ -898,7 +902,14 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
 
   @Override
   public void onReactions(@NonNull GroupCall groupCall, List<Reaction> reactions) {
-    // TODO: Implement handling of reactions.
+    if (FeatureFlags.groupCallReactions()) {
+      processStateless(s -> serviceState.getActionProcessor().handleGroupCallReaction(serviceState, s, reactions));
+    }
+  }
+
+  @Override
+  public void onRaisedHands(@NonNull GroupCall groupCall, List<Long> raisedHands) {
+    // TODO: Implement handling of raise hand.
   }
 
   @Override
@@ -1004,7 +1015,9 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
     });
   }
 
-  public void sendGroupCallUpdateMessage(@NonNull Recipient recipient, @Nullable String groupCallEraId, boolean isIncoming, boolean isJoinEvent) {
+  public void sendGroupCallUpdateMessage(@NonNull Recipient recipient, @Nullable String groupCallEraId, final @Nullable CallId callId, boolean isIncoming, boolean isJoinEvent) {
+    Log.i(TAG, "sendGroupCallUpdateMessage id: " + recipient.getId() + " era: " + groupCallEraId + " isIncoming: " + isIncoming + " isJoinEvent: " + isJoinEvent);
+
     if (recipient.isCallLink()) {
       Log.i(TAG, "sendGroupCallUpdateMessage -- ignoring for call link");
       return;
@@ -1013,15 +1026,28 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
     SignalExecutors.BOUNDED.execute(() -> {
       GroupCallUpdateSendJob updateSendJob = GroupCallUpdateSendJob.create(recipient.getId(), groupCallEraId);
       JobManager.Chain       chain         = ApplicationDependencies.getJobManager().startChain(updateSendJob);
+      CallId                 callIdLocal   = callId;
 
-      if (isJoinEvent && groupCallEraId != null) {
-        chain.then(CallSyncEventJob.createForJoin(
-            recipient.getId(),
-            CallId.fromEra(groupCallEraId).longValue(),
-            isIncoming
-        ));
-      } else if (isJoinEvent) {
-        Log.w(TAG, "Can't send join event sync message without an era id.");
+      if (callIdLocal == null && groupCallEraId != null) {
+        callIdLocal = CallId.fromEra(groupCallEraId);
+      }
+
+      if (callIdLocal != null) {
+        if (isJoinEvent) {
+          chain.then(CallSyncEventJob.createForJoin(
+              recipient.getId(),
+              callIdLocal.longValue(),
+              isIncoming
+          ));
+        } else if (isIncoming) {
+          chain.then(CallSyncEventJob.createForNotAccepted(
+              recipient.getId(),
+              callIdLocal.longValue(),
+              isIncoming
+          ));
+        }
+      } else {
+        Log.w(TAG, "Can't send sync message without a call id. isIncoming: " + isIncoming + " isJoinEvent: " + isJoinEvent);
       }
 
       chain.enqueue();

@@ -36,8 +36,8 @@ import org.thoughtcrime.securesms.conversation.mutiselect.Multiselect
 import org.thoughtcrime.securesms.conversation.mutiselect.MultiselectPart
 import org.thoughtcrime.securesms.conversation.mutiselect.Multiselectable
 import org.thoughtcrime.securesms.conversation.v2.data.ConversationMessageElement
-import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.recipients.RecipientId
@@ -164,6 +164,8 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
     binding.bodyWrapper.layoutTransition = bodyBubbleLayoutTransition
 
     binding.footerBackground.background = footerDrawable
+    binding.footerDate.setOnClickListener(passthroughClickListener)
+    binding.footerDate.setOnLongClickListener(passthroughClickListener)
   }
 
   override fun invalidateChatColorsDrawable(coordinateRoot: ViewGroup) {
@@ -230,16 +232,14 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
     presentSenderNameBackground()
     presentReactions()
 
-    bodyBubbleDrawable.setChatColors(
-      if (binding.body.isJumbomoji) {
-        transparentChatColors
-      } else if (binding.isIncoming) {
-        ChatColors.forColor(ChatColors.Id.NotSet, themeDelegate.getBodyBubbleColor(conversationMessage))
-      } else {
-        conversationMessage.threadRecipient.chatColors
-      },
-      shapeDelegate.cornersLTR
-    )
+    bodyBubbleDrawable.setCorners(shapeDelegate.cornersLTR)
+    if (binding.body.isJumbomoji) {
+      bodyBubbleDrawable.setLocalChatColors(transparentChatColors)
+    } else if (binding.isIncoming) {
+      bodyBubbleDrawable.setLocalChatColors(ChatColors.forColor(ChatColors.Id.NotSet, themeDelegate.getBodyBubbleColor(conversationMessage)))
+    } else {
+      bodyBubbleDrawable.clearLocalChatColors()
+    }
 
     binding.reply.setBackgroundColor(themeDelegate.getReplyIconBackgroundColor())
 
@@ -506,10 +506,8 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
     }
 
     if (conversationContext.hasWallpaper()) {
-      senderDrawable.setChatColors(
-        ChatColors.forColor(ChatColors.Id.BuiltIn, themeDelegate.getFooterBubbleColor(conversationMessage)),
-        footerCorners
-      )
+      senderDrawable.setCorners(footerCorners)
+      senderDrawable.setLocalChatColors(ChatColors.forColor(ChatColors.Id.BuiltIn, themeDelegate.getFooterBubbleColor(conversationMessage)))
 
       binding.senderName.background = senderDrawable
     } else {
@@ -606,14 +604,13 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
     }
 
     binding.footerBackground.visible = true
-    footerDrawable.setChatColors(
-      if (binding.isIncoming) {
-        ChatColors.forColor(ChatColors.Id.NotSet, themeDelegate.getFooterBubbleColor(conversationMessage))
-      } else {
-        conversationMessage.threadRecipient.chatColors
-      },
-      footerCorners
-    )
+    footerDrawable.setCorners(footerCorners)
+
+    if (binding.isIncoming) {
+      footerDrawable.setLocalChatColors(ChatColors.forColor(ChatColors.Id.NotSet, themeDelegate.getFooterBubbleColor(conversationMessage)))
+    } else {
+      footerDrawable.clearLocalChatColors()
+    }
   }
 
   private fun presentDate() {
@@ -645,8 +642,12 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
       binding.footerDate.text = conversationMessage.computedProperties.formattedDate.value
     } else {
       var date = dateString
-      if (conversationContext.displayMode != ConversationItemDisplayMode.Detailed && record is MediaMmsMessageRecord && record.isEditMessage()) {
-        date = getContext().getString(R.string.ConversationItem_edited_timestamp_footer, date)
+      if (conversationContext.displayMode != ConversationItemDisplayMode.Detailed && record is MmsMessageRecord && record.isEditMessage()) {
+        date = if (conversationMessage.computedProperties.formattedDate.isNow) {
+          getContext().getString(R.string.ConversationItem_edited_now_timestamp_footer)
+        } else {
+          getContext().getString(R.string.ConversationItem_edited_timestamp_footer, date)
+        }
 
         binding.footerDate.setOnClickListener {
           conversationContext.clickListener.onEditedIndicatorClicked(record)
@@ -670,7 +671,7 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
 
     deliveryStatus.setTint(themeDelegate.getFooterForegroundColor(conversationMessage))
 
-    if (messageId != newMessageId && deliveryStatus.isPending && !record.isPending) {
+    if (messageId == newMessageId && deliveryStatus.isPending && !record.isPending) {
       if (record.toRecipient.isGroup) {
         SignalLocalMetrics.GroupMessageSend.onUiUpdated(record.id)
       } else {
@@ -703,7 +704,7 @@ open class V2ConversationItemTextOnlyViewHolder<Model : MappingModel<Model>>(
 
     when {
       record.isPending -> deliveryStatus.setPending()
-      record.isRemoteRead -> deliveryStatus.setRead()
+      record.hasReadReceipt() -> deliveryStatus.setRead()
       record.isDelivered -> deliveryStatus.setDelivered()
       else -> deliveryStatus.setSent()
     }

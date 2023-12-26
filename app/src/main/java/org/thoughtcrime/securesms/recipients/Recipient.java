@@ -47,6 +47,7 @@ import org.thoughtcrime.securesms.profiles.ProfileName;
 import org.thoughtcrime.securesms.service.webrtc.links.CallLinkRoomId;
 import org.thoughtcrime.securesms.util.AvatarUtil;
 import org.thoughtcrime.securesms.util.FeatureFlags;
+import org.thoughtcrime.securesms.util.UsernameUtil;
 import org.thoughtcrime.securesms.util.Util;
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaper;
 import org.whispersystems.signalservice.api.push.ServiceId;
@@ -354,6 +355,8 @@ public class Recipient {
       id = db.getOrInsertFromGroupId(GroupId.parseOrThrow(identifier));
     } else if (NumberUtil.isValidEmail(identifier)) {
       id = db.getOrInsertFromEmail(identifier);
+    } else if (UsernameUtil.isValidUsernameForSearch(identifier)) {
+      throw new IllegalArgumentException("Creating a recipient based on username alone is not supported!");
     } else {
       String e164 = PhoneNumberFormatter.get(context).format(identifier);
       id = db.getOrInsertFromE164(e164);
@@ -666,7 +669,7 @@ public class Recipient {
 
   public @NonNull Optional<String> getUsername() {
     if (FeatureFlags.usernames()) {
-      return Optional.ofNullable(username);
+      return OptionalUtil.absentIfEmpty(username);
     } else {
       return Optional.empty();
     }
@@ -1196,7 +1199,7 @@ public class Recipient {
    * Forces retrieving a fresh copy of the recipient, regardless of its state.
    */
   public @NonNull Recipient fresh() {
-    return live().resolve();
+    return live().refresh().resolve();
   }
 
   public @NonNull LiveRecipient live() {

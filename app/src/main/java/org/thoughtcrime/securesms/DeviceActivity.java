@@ -30,7 +30,7 @@ import org.thoughtcrime.securesms.crypto.ProfileKeyUtil;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.permissions.Permissions;
-import org.thoughtcrime.securesms.util.Base64;
+import org.signal.core.util.Base64;
 import org.thoughtcrime.securesms.util.DynamicLanguage;
 import org.thoughtcrime.securesms.util.DynamicNoActionBarTheme;
 import org.thoughtcrime.securesms.util.DynamicTheme;
@@ -195,7 +195,7 @@ public class DeviceActivity extends PassphraseRequiredActivity
           ProfileKey      profileKey         = ProfileKeyUtil.getSelfProfileKey();
 
           TextSecurePreferences.setMultiDevice(DeviceActivity.this, true);
-          accountManager.addDevice(ephemeralId, publicKey, aciIdentityKeyPair, pniIdentityKeyPair, profileKey, verificationCode);
+          accountManager.addDevice(ephemeralId, publicKey, aciIdentityKeyPair, pniIdentityKeyPair, profileKey, SignalStore.svr().getOrCreateMasterKey(), verificationCode);
 
           return SUCCESS;
         } catch (NotFoundException e) {
