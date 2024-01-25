@@ -1006,7 +1006,7 @@
         android:exported="false"/>
 
     <activity android:name=".contacts.TurnOffContactJoinedNotificationsActivity"
-              android:theme="@style/Theme.AppCompat.Dialog.Alert"
+              android:theme="@style/TextSecure.DialogActivity"
               android:exported="false"/>
 
     <activity android:name=".contactshare.ContactShareEditActivity"
@@ -1393,6 +1393,16 @@
         android:exported="false">
         <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+    </receiver>
+
+    <service android:name="org.thoughtcrime.securesms.service.webrtc.ActiveCallManager$ActiveCallForegroundService" android:exported="false" />
+    <receiver android:name="org.thoughtcrime.securesms.service.webrtc.ActiveCallManager$ActiveCallServiceReceiver" android:exported="false">
+        <intent-filter>
+            <action android:name="org.thoughtcrime.securesms.service.webrtc.ActiveCallAction.DENY"/>
+        </intent-filter>
+        <intent-filter>
+            <action android:name="org.thoughtcrime.securesms.service.webrtc.ActiveCallAction.HANGUP"/>
         </intent-filter>
     </receiver>
 

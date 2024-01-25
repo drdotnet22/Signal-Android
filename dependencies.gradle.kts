@@ -9,13 +9,13 @@ dependencyResolutionManagement {
       version("androidx-camera", "1.3.0-rc01")
       version("androidx-fragment", "1.6.1")
       version("androidx-lifecycle", "2.6.1")
-      version("androidx-media3", "1.1.0")
+      version("androidx-media3", "1.2.1")
       version("androidx-navigation", "2.6.0")
       version("androidx-window", "1.0.0")
       version("exoplayer", "2.19.0")
       version("glide", "4.15.1")
       version("kotlin", "1.8.10")
-      version("libsignal-client", "0.36.1")
+      version("libsignal-client", "0.39.2")
       version("mp4parser", "1.9.39")
       version("android-gradle-plugin", "8.0.2")
       version("accompanist", "0.28.0")
@@ -67,6 +67,8 @@ dependencyResolutionManagement {
       library("androidx-media3-exoplayer", "androidx.media3", "media3-exoplayer").versionRef("androidx-media3")
       library("androidx-media3-session", "androidx.media3", "media3-session").versionRef("androidx-media3")
       library("androidx-media3-ui", "androidx.media3", "media3-ui").versionRef("androidx-media3")
+      library("androidx-media3-decoder", "androidx.media3", "media3-decoder").versionRef("androidx-media3")
+      library("androidx-media3-common", "androidx.media3", "media3-common").versionRef("androidx-media3")
       library("androidx-multidex", "androidx.multidex:multidex:2.0.1")
       library("androidx-navigation-fragment-ktx", "androidx.navigation", "navigation-fragment-ktx").versionRef("androidx-navigation")
       library("androidx-navigation-ui-ktx", "androidx.navigation", "navigation-ui-ktx").versionRef("androidx-navigation")
@@ -116,7 +118,7 @@ dependencyResolutionManagement {
       library("libsignal-client", "org.signal", "libsignal-client").versionRef("libsignal-client")
       library("libsignal-android", "org.signal", "libsignal-android").versionRef("libsignal-client")
       library("signal-aesgcmprovider", "org.signal:aesgcmprovider:0.0.3")
-      library("signal-ringrtc", "org.signal:ringrtc-android:2.34.5")
+      library("signal-ringrtc", "org.signal:ringrtc-android:2.36.0")
       library("signal-android-database-sqlcipher", "org.signal:sqlcipher-android:4.5.4-S2")
 
       // Third Party
@@ -131,7 +133,7 @@ dependencyResolutionManagement {
       library("rxjava3-rxkotlin", "io.reactivex.rxjava3:rxkotlin:3.0.1")
       library("rxdogtag", "com.uber.rxdogtag2:rxdogtag:2.0.1")
       library("conscrypt-android", "org.conscrypt:conscrypt-android:2.5.2")
-      library("mobilecoin", "com.mobilecoin:android-sdk:5.0.1")
+      library("mobilecoin", "com.mobilecoin:android-sdk:6.0.1")
       library("leolin-shortcutbadger", "me.leolin:ShortcutBadger:1.1.22")
       library("emilsjolander-stickylistheaders", "se.emilsjolander:stickylistheaders:2.7.0")
       library("apache-httpclient-android", "org.apache.httpcomponents:httpclient-android:4.3.5")
@@ -172,8 +174,8 @@ dependencyResolutionManagement {
     }
 
     create("testLibs") {
-      version("androidx-test", "1.4.0")
-      version("androidx-test-ext-junit", "1.1.1")
+      version("androidx-test", "1.5.0")
+      version("androidx-test-ext-junit", "1.1.5")
       version("robolectric", "4.10.3")
 
       library("junit-junit", "junit:junit:4.13.2")
