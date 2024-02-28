@@ -21,8 +21,8 @@ plugins {
 
 apply(from = "static-ips.gradle.kts")
 
-val canonicalVersionCode = 1378
-val canonicalVersionName = "6.45.0"
+val canonicalVersionCode = 1396
+val canonicalVersionName = "7.0.2"
 
 val postFixSize = 100
 val abiPostFix: Map<String, Int> = mapOf(
@@ -98,7 +98,6 @@ android {
 
   kotlinOptions {
     jvmTarget = signalKotlinJvmTarget
-    freeCompilerArgs = listOf("-Xallow-result-return-type")
   }
 
   keystores["debug"]?.let { properties ->
@@ -164,8 +163,8 @@ android {
     versionCode = canonicalVersionCode * postFixSize
     versionName = canonicalVersionName
 
-    minSdkVersion(signalMinSdkVersion)
-    targetSdkVersion(signalTargetSdkVersion)
+    minSdk = signalMinSdkVersion
+    targetSdk = signalTargetSdkVersion
 
     multiDexEnabled = true
 
@@ -415,9 +414,7 @@ android {
   }
 
   applicationVariants.all {
-    val variant = this
-
-    variant.outputs
+    outputs
       .map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }
       .forEach { output ->
         if (output.baseName.contains("nightly")) {
@@ -430,10 +427,10 @@ android {
             output.versionNameOverride = tag
             output.outputFileName = output.outputFileName.replace(".apk", "-${output.versionNameOverride}.apk")
           } else {
-            output.outputFileName = output.outputFileName.replace(".apk", "-${variant.versionName}.apk")
+            output.outputFileName = output.outputFileName.replace(".apk", "-$versionName.apk")
           }
         } else {
-          output.outputFileName = output.outputFileName.replace(".apk", "-${variant.versionName}.apk")
+          output.outputFileName = output.outputFileName.replace(".apk", "-$versionName.apk")
 
           val abiName: String = output.getFilter("ABI") ?: "universal"
           val postFix: Int = abiPostFix[abiName]!!
@@ -447,25 +444,20 @@ android {
       }
   }
 
-  android.variantFilter {
-    val distribution: String = flavors[0].name
-    val environment: String = flavors[1].name
-    val buildType: String = buildType.name
-    val fullName: String = distribution + environment.capitalize() + buildType.capitalize()
-
-    if (!selectableVariants.contains(fullName)) {
-      ignore = true
+  androidComponents {
+    beforeVariants { variant ->
+      variant.enable = variant.name in selectableVariants
     }
   }
 
-  android.buildTypes.forEach {
-    val path: String = if (it.name == "release") {
-      "$projectDir/src/release/java"
-    } else {
-      "$projectDir/src/debug/java"
-    }
+  val releaseDir = "$projectDir/src/release/java"
+  val debugDir = "$projectDir/src/debug/java"
 
-    sourceSets.findByName(it.name)!!.java.srcDir(path)
+  android.buildTypes.configureEach {
+    val path = if (name == "release") releaseDir else debugDir
+    sourceSets.named(name) {
+      java.srcDir(path)
+    }
   }
 }
 
@@ -484,7 +476,6 @@ dependencies {
   implementation(project(":donations"))
   implementation(project(":contacts"))
   implementation(project(":qr"))
-  implementation(project(":sms-exporter"))
   implementation(project(":sticky-header-grid"))
   implementation(project(":photoview"))
   implementation(project(":core-ui"))
@@ -506,16 +497,19 @@ dependencies {
   implementation(libs.androidx.exifinterface)
   implementation(libs.androidx.compose.rxjava3)
   implementation(libs.androidx.compose.runtime.livedata)
+  implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.constraintlayout)
   implementation(libs.androidx.multidex)
   implementation(libs.androidx.navigation.fragment.ktx)
   implementation(libs.androidx.navigation.ui.ktx)
+  implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
   implementation(libs.androidx.lifecycle.livedata.ktx)
   implementation(libs.androidx.lifecycle.process)
   implementation(libs.androidx.lifecycle.viewmodel.savedstate)
   implementation(libs.androidx.lifecycle.common.java8)
   implementation(libs.androidx.lifecycle.reactivestreams.ktx)
+  implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.camera.core)
   implementation(libs.androidx.camera.camera2)
   implementation(libs.androidx.camera.lifecycle)

@@ -159,9 +159,15 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
     SignalDatabase.recipients.markProfilesFetched(successIds, System.currentTimeMillis())
     stopwatch.split("mark-fetched")
 
-    if (operationState.unregistered.isNotEmpty() || newlyRegisteredIds.isNotEmpty()) {
-      Log.i(TAG, "Marking " + newlyRegisteredIds.size + " users as registered and " + operationState.unregistered.size + " users as unregistered.")
-      SignalDatabase.recipients.bulkUpdatedRegisteredStatus(newlyRegisteredIds, operationState.unregistered)
+    if (newlyRegisteredIds.isNotEmpty()) {
+      Log.i(TAG, "Marking " + newlyRegisteredIds.size + " users as registered.")
+      SignalDatabase.recipients.bulkUpdatedRegisteredStatus(newlyRegisteredIds, emptySet())
+    }
+    if (operationState.unregistered.isNotEmpty()) {
+      Log.i(TAG, "Marking " + operationState.unregistered.size + " users as unregistered.")
+      for (recipientId in operationState.unregistered) {
+        SignalDatabase.recipients.markUnregistered(recipientId)
+      }
     }
     stopwatch.split("registered-update")
 
@@ -378,9 +384,12 @@ class RetrieveProfileJob private constructor(parameters: Parameters, private val
         }
 
         if (writeChangeEvent || localDisplayName.isEmpty()) {
+          ApplicationDependencies.getDatabaseObserver().notifyConversationListListeners()
           val threadId = SignalDatabase.threads.getThreadIdFor(recipient.id)
           if (threadId != null) {
-            ApplicationDependencies.getMessageNotifier().updateNotification(context, forConversation(threadId))
+            SignalDatabase.runPostSuccessfulTransaction {
+              ApplicationDependencies.getMessageNotifier().updateNotification(context, forConversation(threadId))
+            }
           }
         }
 

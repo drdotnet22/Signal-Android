@@ -40,6 +40,7 @@ import org.thoughtcrime.securesms.util.MediaUtil;
 import org.thoughtcrime.securesms.util.MemoryFileDescriptor.MemoryFileException;
 import org.thoughtcrime.securesms.video.InMemoryTranscoder;
 import org.thoughtcrime.securesms.video.StreamingTranscoder;
+import org.thoughtcrime.securesms.video.exceptions.VideoPostProcessingException;
 import org.thoughtcrime.securesms.video.interfaces.TranscoderCancelationSignal;
 import org.thoughtcrime.securesms.video.TranscoderOptions;
 import org.thoughtcrime.securesms.video.exceptions.VideoSourceException;
@@ -248,14 +249,16 @@ public final class AttachmentCompressionJob extends BaseJob {
           throw new UndeliverableMessageException("Cannot get media data source for attachment.");
         }
 
-        allowSkipOnFailure = !transformProperties.getVideoEdited();
         TranscoderOptions options = null;
-        if (transformProperties.videoTrim) {
-          options = new TranscoderOptions(transformProperties.videoTrimStartTimeUs, transformProperties.videoTrimEndTimeUs);
+        if (transformProperties != null) {
+          allowSkipOnFailure = !transformProperties.getVideoEdited();
+          if (transformProperties.videoTrim) {
+            options = new TranscoderOptions(transformProperties.videoTrimStartTimeUs, transformProperties.videoTrimEndTimeUs);
+          }
         }
 
         if (FeatureFlags.useStreamingVideoMuxer()) {
-          StreamingTranscoder transcoder = new StreamingTranscoder(dataSource, options, constraints.getCompressedVideoMaxSize(context));
+          StreamingTranscoder transcoder = new StreamingTranscoder(dataSource, options, constraints.getCompressedVideoMaxSize(context), FeatureFlags.allowAudioRemuxing());
 
           if (transcoder.isTranscodeRequired()) {
             Log.i(TAG, "Compressing with streaming muxer");
@@ -287,7 +290,8 @@ public final class AttachmentCompressionJob extends BaseJob {
                 try {
                   return ModernDecryptingPartInputStream.createFor(attachmentSecret, file, 0);
                 } catch (IOException e) {
-                  throw new RuntimeException(e);
+                  Log.w(TAG, "IOException thrown while creating CipherInputStream.", e);
+                  throw new VideoPostProcessingException("Exception while opening InputStream!", e);
                 }
               });
 
@@ -295,6 +299,20 @@ public final class AttachmentCompressionJob extends BaseJob {
               try (MediaStream mediaStream = new MediaStream(postProcessor.process(plaintextLength), MimeTypes.VIDEO_MP4, 0, 0, true)) {
                 attachmentDatabase.updateAttachmentData(attachment, mediaStream, true);
                 faststart = true;
+              } catch (VideoPostProcessingException e) {
+                Log.w(TAG, "Exception thrown during post processing.", e);
+                final Throwable cause = e.getCause();
+                if (cause instanceof IOException) {
+                  throw (IOException) cause;
+                } else if (cause instanceof EncodingException) {
+                  throw (EncodingException) cause;
+                }
+              }
+
+              if (!faststart) {
+                try (MediaStream mediaStream = new MediaStream(ModernDecryptingPartInputStream.createFor(attachmentSecret, file, 0), MimeTypes.VIDEO_MP4, 0, 0, false)) {
+                  attachmentDatabase.updateAttachmentData(attachment, mediaStream, true);
+                }
               }
             } finally {
               if (!file.delete()) {

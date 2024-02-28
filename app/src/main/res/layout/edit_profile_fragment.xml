@@ -12,8 +12,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true">
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -93,9 +92,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dsl_settings_gutter"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="@dimen/dsl_settings_gutter"
                 android:text="@string/ManageProfileFragment__edit_photo"
+                android:textColor="@color/signal_colorOnSurface"
+                app:backgroundTint="@color/signal_colorSurface4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/manage_profile_avatar_background" />
@@ -337,7 +338,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/manage_profile_badges_container"
                 app:layout_constraintVertical_bias="1.0" />
 
-            <org.thoughtcrime.securesms.util.views.LearnMoreTextView
+            <TextView
                 android:id="@+id/username_info_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -400,6 +401,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="30dp"
                     android:src="@drawable/symbol_share_android_24"
+                    app:tint="@color/signal_colorOnPrimaryContainer"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

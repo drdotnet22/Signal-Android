@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @RequiresApi(26)
 public final class StreamingTranscoder {
@@ -38,17 +39,20 @@ public final class StreamingTranscoder {
   private final           boolean            transcodeRequired;
   private final           long               fileSizeEstimate;
   private final @Nullable TranscoderOptions  options;
+  private final           boolean            allowAudioRemux;
 
   /**
    * @param upperSizeLimit A upper size to transcode to. The actual output size can be up to 10% smaller.
    */
   public StreamingTranscoder(@NonNull MediaDataSource dataSource,
                              @Nullable TranscoderOptions options,
-                             long upperSizeLimit)
+                             long upperSizeLimit,
+                             boolean allowAudioRemux)
       throws IOException, VideoSourceException
   {
     this.dataSource = dataSource;
     this.options    = options;
+    this.allowAudioRemux = allowAudioRemux;
 
     final MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
     try {
@@ -58,8 +62,13 @@ public final class StreamingTranscoder {
       throw new VideoSourceException("Unable to read datasource", e);
     }
 
+    if (options != null && options.endTimeUs != 0) {
+      this.duration = TimeUnit.MICROSECONDS.toMillis(options.endTimeUs - options.startTimeUs);
+    } else {
+      this.duration = getDuration(mediaMetadataRetriever);
+    }
+
     this.inSize         = dataSource.getSize();
-    this.duration       = getDuration(mediaMetadataRetriever);
     this.inputBitRate   = VideoBitRateCalculator.bitRate(inSize, duration);
     this.targetQuality  = new VideoBitRateCalculator(upperSizeLimit).getTargetQuality(duration, inputBitRate);
     this.upperSizeLimit = upperSizeLimit;
@@ -75,11 +84,13 @@ public final class StreamingTranscoder {
   public StreamingTranscoder(@NonNull MediaDataSource dataSource,
                              @Nullable TranscoderOptions options,
                              int videoBitrate,
-                             int shortEdge)
+                             int shortEdge,
+                             boolean allowAudioRemux)
       throws IOException, VideoSourceException
   {
-    this.dataSource = dataSource;
-    this.options    = options;
+    this.dataSource      = dataSource;
+    this.options         = options;
+    this.allowAudioRemux = allowAudioRemux;
 
     final MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
     try {
@@ -136,7 +147,7 @@ public final class StreamingTranscoder {
 
     final long startTime = System.currentTimeMillis();
 
-    final MediaConverter          converter               = new MediaConverter();
+    final MediaConverter converter = new MediaConverter();
 
     converter.setInput(new MediaDataSourceMediaInput(dataSource));
     final CountingOutputStream outStream;
@@ -149,6 +160,7 @@ public final class StreamingTranscoder {
     converter.setVideoResolution(targetQuality.getOutputResolution());
     converter.setVideoBitrate(targetQuality.getTargetVideoBitRate());
     converter.setAudioBitrate(targetQuality.getTargetAudioBitRate());
+    converter.setAllowAudioRemux(allowAudioRemux);
 
     if (options != null) {
       if (options.endTimeUs > 0) {

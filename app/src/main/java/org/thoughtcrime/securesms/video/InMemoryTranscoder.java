@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @RequiresApi(26)
 public final class InMemoryTranscoder implements Closeable {
@@ -63,8 +64,13 @@ public final class InMemoryTranscoder implements Closeable {
       throw new VideoSourceException("Unable to read datasource", e);
     }
 
+    if (options != null && options.endTimeUs != 0) {
+      this.duration = TimeUnit.MICROSECONDS.toMillis(options.endTimeUs - options.startTimeUs);
+    } else {
+      this.duration = getDuration(mediaMetadataRetriever);
+    }
+
     this.inSize         = dataSource.getSize();
-    this.duration       = getDuration(mediaMetadataRetriever);
     this.inputBitRate   = VideoBitRateCalculator.bitRate(inSize, duration);
     this.targetQuality  = new VideoBitRateCalculator(upperSizeLimit).getTargetQuality(duration, inputBitRate);
     this.upperSizeLimit = upperSizeLimit;
@@ -185,7 +191,7 @@ public final class InMemoryTranscoder implements Closeable {
       final Throwable cause = e.getCause();
       if (cause instanceof IOException) {
         throw (IOException) cause;
-      } else if ( cause instanceof EncodingException) {
+      } else if (cause instanceof EncodingException) {
         throw (EncodingException) cause;
       }
     }
