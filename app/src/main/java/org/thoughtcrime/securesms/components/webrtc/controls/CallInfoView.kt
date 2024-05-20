@@ -34,12 +34,11 @@ import androidx.compose.runtime.rxjava3.subscribeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -52,7 +51,6 @@ import org.signal.core.ui.Rows
 import org.signal.core.ui.theme.SignalTheme
 import org.signal.ringrtc.CallLinkState
 import org.thoughtcrime.securesms.R
-import org.thoughtcrime.securesms.calls.links.SignalCallRow
 import org.thoughtcrime.securesms.components.AvatarImageView
 import org.thoughtcrime.securesms.components.webrtc.WebRtcCallViewModel
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
@@ -165,8 +163,16 @@ private fun CallInfo(
     modifier = modifier
   ) {
     item {
+      val text = if (controlAndInfoState.callLink == null) {
+        stringResource(id = R.string.CallLinkInfoSheet__call_info)
+      } else if (controlAndInfoState.callLink.state.name.isNotEmpty()) {
+        controlAndInfoState.callLink.state.name
+      } else {
+        stringResource(id = R.string.Recipient_signal_call)
+      }
+
       Text(
-        text = stringResource(id = R.string.CallLinkInfoSheet__call_info),
+        text = text,
         style = MaterialTheme.typography.titleLarge,
         modifier = Modifier.padding(bottom = 24.dp)
       )
@@ -174,11 +180,9 @@ private fun CallInfo(
 
     if (controlAndInfoState.callLink != null) {
       item {
-        SignalCallRow(callLink = controlAndInfoState.callLink, onJoinClicked = null)
-
         Rows.TextRow(
           text = stringResource(id = R.string.CallLinkDetailsFragment__share_link),
-          icon = ImageVector.vectorResource(id = R.drawable.symbol_link_24),
+          icon = painterResource(id = R.drawable.symbol_link_24),
           iconModifier = Modifier
             .background(
               color = MaterialTheme.colorScheme.surfaceVariant,
@@ -224,8 +228,7 @@ private fun CallInfo(
       }
     }
 
-    var includeAdminControlsDivider = true
-    if (controlAndInfoState.callLink == null || participantsState.isOngoing()) {
+    if (!participantsState.inCallLobby || participantsState.isOngoing()) {
       item {
         Box(
           modifier = Modifier
@@ -240,8 +243,6 @@ private fun CallInfo(
           )
         }
       }
-    } else {
-      includeAdminControlsDivider = false
     }
 
     if (!participantsState.inCallLobby || participantsState.isOngoing()) {
@@ -285,12 +286,16 @@ private fun CallInfo(
 
     if (controlAndInfoState.callLink?.credentials?.adminPassBytes != null) {
       item {
-        if (includeAdminControlsDivider) {
+        if (!participantsState.inCallLobby) {
           Dividers.Default()
         }
 
         Rows.TextRow(
-          text = stringResource(id = R.string.CallLinkDetailsFragment__add_call_name),
+          text = if (controlAndInfoState.callLink.state.name.isNotEmpty()) {
+            stringResource(id = R.string.CallLinkDetailsFragment__edit_call_name)
+          } else {
+            stringResource(id = R.string.CallLinkDetailsFragment__add_call_name)
+          },
           onClick = onEditNameClicked
         )
         Rows.ToggleRow(
@@ -440,7 +445,7 @@ private fun CallParticipantRow(
 
     if (showIcons && showHandRaised) {
       Icon(
-        imageVector = ImageVector.vectorResource(id = R.drawable.symbol_raise_hand_24),
+        painter = painterResource(id = R.drawable.symbol_raise_hand_24),
         contentDescription = null,
         modifier = Modifier.align(Alignment.CenterVertically)
       )
@@ -448,7 +453,7 @@ private fun CallParticipantRow(
 
     if (showIcons && !isVideoEnabled) {
       Icon(
-        imageVector = ImageVector.vectorResource(id = R.drawable.symbol_video_slash_24),
+        painter = painterResource(id = R.drawable.symbol_video_slash_24),
         contentDescription = null,
         modifier = Modifier.align(Alignment.CenterVertically)
       )
@@ -460,7 +465,7 @@ private fun CallParticipantRow(
       }
 
       Icon(
-        imageVector = ImageVector.vectorResource(id = R.drawable.symbol_mic_slash_24),
+        painter = painterResource(id = R.drawable.symbol_mic_slash_24),
         contentDescription = null,
         modifier = Modifier.align(Alignment.CenterVertically)
       )
@@ -472,7 +477,7 @@ private fun CallParticipantRow(
       }
 
       Icon(
-        imageVector = ImageVector.vectorResource(id = R.drawable.symbol_minus_circle_24),
+        painter = painterResource(id = R.drawable.symbol_minus_circle_24),
         contentDescription = null,
         modifier = Modifier
           .clickable(onClick = onBlockClicked)

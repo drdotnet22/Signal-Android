@@ -91,18 +91,22 @@ class CallLinkTable(context: Context, databaseHelper: SignalDatabase) : Database
 
   fun insertCallLink(
     callLink: CallLink
-  ) {
-    writableDatabase.withinTransaction { db ->
+  ): RecipientId {
+    val recipientId: RecipientId = writableDatabase.withinTransaction { db ->
       val recipientId = SignalDatabase.recipients.getOrInsertFromCallLinkRoomId(callLink.roomId)
 
       db
         .insertInto(TABLE_NAME)
         .values(CallLinkSerializer.serialize(callLink.copy(recipientId = recipientId)))
         .run()
+
+      recipientId
     }
 
     ApplicationDependencies.getDatabaseObserver().notifyCallLinkObservers(callLink.roomId)
     ApplicationDependencies.getDatabaseObserver().notifyCallUpdateObservers()
+
+    return recipientId!!
   }
 
   fun updateCallLinkCredentials(
@@ -231,6 +235,37 @@ class CallLinkTable(context: Context, databaseHelper: SignalDatabase) : Database
     }
   }
 
+  /**
+   * Puts the call link into the "revoked" state which will hide it from the UI and
+   * delete it after a few days.
+   */
+  fun markRevoked(
+    roomId: CallLinkRoomId
+  ) {
+    writableDatabase.withinTransaction { db ->
+      db.update(TABLE_NAME)
+        .values(REVOKED to true)
+        .where("$ROOM_ID = ?", roomId.serialize())
+        .run()
+
+      SignalDatabase.calls.updateAdHocCallEventDeletionTimestamps()
+    }
+  }
+
+  /**
+   * Deletes the call link. This should only happen *after* we send out a sync message
+   * or receive a sync message which deletes the corresponding link.
+   */
+  fun deleteCallLink(
+    roomId: CallLinkRoomId
+  ) {
+    writableDatabase.withinTransaction { db ->
+      db.delete(TABLE_NAME)
+        .where("$ROOM_ID = ?", roomId.serialize())
+        .run()
+    }
+  }
+
   fun deleteNonAdminCallLinks(roomIds: Set<CallLinkRoomId>) {
     val queries = SqlUtil.buildCollectionQuery(ROOM_ID, roomIds)
 
@@ -346,7 +381,7 @@ class CallLinkTable(context: Context, databaseHelper: SignalDatabase) : Database
     val statement = """
       SELECT $projection
       FROM $TABLE_NAME
-      WHERE $noCallEvent AND NOT $REVOKED ${searchFilter?.where ?: ""}
+      WHERE $noCallEvent AND NOT $REVOKED ${searchFilter?.where ?: ""} AND $ROOT_KEY IS NOT NULL
       ORDER BY $ID DESC
       $limitOffset
     """.trimIndent()
@@ -371,7 +406,7 @@ class CallLinkTable(context: Context, databaseHelper: SignalDatabase) : Database
     }
   }
 
-  private object CallLinkDeserializer : Serializer<CallLink, Cursor> {
+  object CallLinkDeserializer : Serializer<CallLink, Cursor> {
     override fun serialize(data: CallLink): Cursor {
       throw UnsupportedOperationException()
     }

@@ -186,6 +186,8 @@ public final class PushGroupSendJob extends PushSendJob {
     Set<NetworkFailure>      existingNetworkFailures    = new HashSet<>(message.getNetworkFailures());
     Set<IdentityKeyMismatch> existingIdentityMismatches = new HashSet<>(message.getIdentityKeyMismatches());
 
+    SignalLocalMetrics.GroupMessageSend.setSentTimestamp(messageId, message.getSentTimeMillis());
+
     ApplicationDependencies.getJobManager().cancelAllInQueue(TypingSendJob.getQueue(threadId));
 
     if (database.isSent(messageId)) {
@@ -492,7 +494,11 @@ public final class PushGroupSendJob extends PushSendJob {
     } else if (!networkFailures.isEmpty()) {
       long retryAfter = results.stream()
                                .filter(r -> r.getRateLimitFailure() != null)
-                               .map(r -> r.getRateLimitFailure().getRetryAfterMilliseconds().orElse(-1L))
+                               .map(r -> {
+                                      long milliseconds = r.getRateLimitFailure().getRetryAfterMilliseconds().orElse(-1L);
+                                      return (milliseconds > 0) ? milliseconds : -1L;
+                                    }
+                               )
                                .max(Long::compare)
                                .orElse(-1L);
       Log.w(TAG, "Retrying because there were " + networkFailures.size() + " network failures. retryAfter: " + retryAfter);

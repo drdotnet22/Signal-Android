@@ -53,6 +53,7 @@ import org.thoughtcrime.securesms.contacts.avatars.ContactPhoto;
 import org.thoughtcrime.securesms.contacts.avatars.ProfileContactPhoto;
 import org.thoughtcrime.securesms.events.CallParticipant;
 import org.thoughtcrime.securesms.events.WebRtcViewModel;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
 import org.thoughtcrime.securesms.ringrtc.CameraState;
@@ -432,7 +433,7 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
     List<WebRtcCallParticipantsPage> pages              = new ArrayList<>(2);
 
     if (!state.getGridParticipants().isEmpty()) {
-      pages.add(WebRtcCallParticipantsPage.forMultipleParticipants(state.getGridParticipants(), state.getFocusedParticipant(), state.isInPipMode(), isPortrait, isLandscapeEnabled, state.isIncomingRing(), navBarBottomInset));
+      pages.add(WebRtcCallParticipantsPage.forMultipleParticipants(state.getGridParticipants(), state.getFocusedParticipant(), state.isInPipMode(), isPortrait, isLandscapeEnabled, state.getHideAvatar(), navBarBottomInset));
     }
 
     if (state.getFocusedParticipant() != CallParticipant.EMPTY && state.getAllRemoteParticipants().size() > 1) {
@@ -441,7 +442,13 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
 
     if (state.getGroupCallState().isNotIdle()) {
       if (state.getCallState() == WebRtcViewModel.State.CALL_PRE_JOIN) {
-        callLinkWarningCard.setVisibility(callParticipantsViewState.isStartedFromCallLink() ? View.VISIBLE : View.GONE);
+        if (callParticipantsViewState.isStartedFromCallLink()) {
+          TextView warningTextView = callLinkWarningCard.get().findViewById(R.id.call_screen_call_link_warning_textview);
+          warningTextView.setText(SignalStore.phoneNumberPrivacy().isPhoneNumberSharingEnabled() ? R.string.WebRtcCallView__anyone_who_joins_pnp_enabled : R.string.WebRtcCallView__anyone_who_joins_pnp_disabled);
+          callLinkWarningCard.setVisibility(View.VISIBLE);
+        } else {
+          callLinkWarningCard.setVisibility(View.GONE);
+        }
         setStatus(state.getPreJoinGroupDescription(getContext()));
       } else if (state.getCallState() == WebRtcViewModel.State.CALL_CONNECTED && state.isInOutgoingRingingMode()) {
         callLinkWarningCard.setVisibility(View.GONE);
@@ -503,11 +510,11 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
 
     if (state == WebRtcLocalRenderState.EXPANDED) {
       pictureInPictureExpansionHelper.beginExpandTransition();
-      smallLocalRender.setSelfPipMode(CallParticipantView.SelfPipMode.EXPANDED_SELF_PIP);
+      smallLocalRender.setSelfPipMode(CallParticipantView.SelfPipMode.EXPANDED_SELF_PIP, localCallParticipant.isMoreThanOneCameraAvailable());
       return;
     } else if ((state.isAnySmall() || state == WebRtcLocalRenderState.GONE) && pictureInPictureExpansionHelper.isExpandedOrExpanding()) {
       pictureInPictureExpansionHelper.beginShrinkTransition();
-      smallLocalRender.setSelfPipMode(pictureInPictureExpansionHelper.isMiniSize() ? CallParticipantView.SelfPipMode.MINI_SELF_PIP : CallParticipantView.SelfPipMode.NORMAL_SELF_PIP);
+      smallLocalRender.setSelfPipMode(pictureInPictureExpansionHelper.isMiniSize() ? CallParticipantView.SelfPipMode.MINI_SELF_PIP : CallParticipantView.SelfPipMode.NORMAL_SELF_PIP, localCallParticipant.isMoreThanOneCameraAvailable());
 
       if (state != WebRtcLocalRenderState.GONE) {
         return;
@@ -523,14 +530,14 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
         break;
       case SMALL_RECTANGLE:
         smallLocalRenderFrame.setVisibility(View.VISIBLE);
-        animatePipToLargeRectangle(displaySmallSelfPipInLandscape);
+        animatePipToLargeRectangle(displaySmallSelfPipInLandscape, localCallParticipant.isMoreThanOneCameraAvailable());
 
         largeLocalRender.attachBroadcastVideoSink(null);
         largeLocalRenderFrame.setVisibility(View.GONE);
         break;
       case SMALLER_RECTANGLE:
         smallLocalRenderFrame.setVisibility(View.VISIBLE);
-        animatePipToSmallRectangle();
+        animatePipToSmallRectangle(localCallParticipant.isMoreThanOneCameraAvailable());
 
         largeLocalRender.attachBroadcastVideoSink(null);
         largeLocalRenderFrame.setVisibility(View.GONE);
@@ -782,7 +789,7 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
     }
   }
 
-  private void animatePipToLargeRectangle(boolean isLandscape) {
+  private void animatePipToLargeRectangle(boolean isLandscape, boolean moreThanOneCameraAvailable) {
     final Point dimens;
     if (isLandscape) {
       dimens = new Point(ViewUtil.dpToPx(PictureInPictureExpansionHelper.NORMAL_PIP_HEIGHT_DP),
@@ -799,10 +806,10 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
       }
     });
 
-    smallLocalRender.setSelfPipMode(CallParticipantView.SelfPipMode.NORMAL_SELF_PIP);
+    smallLocalRender.setSelfPipMode(CallParticipantView.SelfPipMode.NORMAL_SELF_PIP, moreThanOneCameraAvailable);
   }
 
-  private void animatePipToSmallRectangle() {
+  private void animatePipToSmallRectangle(boolean moreThanOneCameraAvailable) {
     pictureInPictureExpansionHelper.startDefaultSizeTransition(new Point(ViewUtil.dpToPx(PictureInPictureExpansionHelper.MINI_PIP_WIDTH_DP),
                                                                          ViewUtil.dpToPx(PictureInPictureExpansionHelper.MINI_PIP_HEIGHT_DP)),
                                                                new PictureInPictureExpansionHelper.Callback() {
@@ -812,7 +819,7 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
                                                                  }
                                                                });
 
-    smallLocalRender.setSelfPipMode(CallParticipantView.SelfPipMode.MINI_SELF_PIP);
+    smallLocalRender.setSelfPipMode(CallParticipantView.SelfPipMode.MINI_SELF_PIP, moreThanOneCameraAvailable);
   }
 
   private void toggleControls() {
@@ -835,6 +842,7 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
     previousLayoutPositions = layoutPositions;
 
     ConstraintSet constraintSet = new ConstraintSet();
+    constraintSet.setForceId(false);
     constraintSet.clone(this);
 
     constraintSet.connect(R.id.call_screen_participants_parent,
@@ -868,6 +876,7 @@ public class WebRtcCallView extends InsetAwareConstraintLayout {
 
   private void updatePendingParticipantsBottomConstraint(View anchor) {
     ConstraintSet constraintSet = new ConstraintSet();
+    constraintSet.setForceId(false);
     constraintSet.clone(this);
 
     constraintSet.connect(R.id.call_screen_pending_recipients,

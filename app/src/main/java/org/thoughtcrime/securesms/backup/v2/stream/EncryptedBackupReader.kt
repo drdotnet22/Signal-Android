@@ -10,6 +10,7 @@ import org.signal.core.util.readNBytesOrThrow
 import org.signal.core.util.readVarInt32
 import org.signal.core.util.stream.MacInputStream
 import org.signal.core.util.stream.TruncatingInputStream
+import org.thoughtcrime.securesms.backup.v2.proto.BackupInfo
 import org.thoughtcrime.securesms.backup.v2.proto.Frame
 import org.whispersystems.signalservice.api.backup.BackupKey
 import org.whispersystems.signalservice.api.push.ServiceId.ACI
@@ -33,31 +34,39 @@ class EncryptedBackupReader(
   aci: ACI,
   streamLength: Long,
   dataStream: () -> InputStream
-) : Iterator<Frame>, AutoCloseable {
+) : BackupImportReader {
 
+  val backupInfo: BackupInfo?
   var next: Frame? = null
   val stream: InputStream
 
   init {
-    val keyMaterial = key.deriveSecrets(aci)
-
-    val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding").apply {
-      init(Cipher.DECRYPT_MODE, SecretKeySpec(keyMaterial.cipherKey, "AES"), IvParameterSpec(keyMaterial.iv))
-    }
+    val keyMaterial = key.deriveBackupSecrets(aci)
 
     validateMac(keyMaterial.macKey, streamLength, dataStream())
+
+    val inputStream = dataStream()
+    val iv = inputStream.readNBytesOrThrow(16)
+
+    val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding").apply {
+      init(Cipher.DECRYPT_MODE, SecretKeySpec(keyMaterial.cipherKey, "AES"), IvParameterSpec(iv))
+    }
 
     stream = GZIPInputStream(
       CipherInputStream(
         TruncatingInputStream(
-          wrapped = dataStream(),
+          wrapped = inputStream,
           maxBytes = streamLength - MAC_SIZE
         ),
         cipher
       )
     )
-
+    backupInfo = readHeader()
     next = read()
+  }
+
+  override fun getHeader(): BackupInfo? {
+    return backupInfo
   }
 
   override fun hasNext(): Boolean {
@@ -69,6 +78,17 @@ class EncryptedBackupReader(
       next = read()
       return out
     } ?: throw NoSuchElementException()
+  }
+
+  private fun readHeader(): BackupInfo? {
+    try {
+      val length = stream.readVarInt32().takeIf { it >= 0 } ?: return null
+      val headerBytes: ByteArray = stream.readNBytesOrThrow(length)
+
+      return BackupInfo.ADAPTER.decode(headerBytes)
+    } catch (e: EOFException) {
+      return null
+    }
   }
 
   private fun read(): Frame? {
