@@ -15,6 +15,7 @@ import org.signal.core.util.requireNonNullString
 import org.signal.core.util.requireObject
 import org.signal.core.util.requireString
 import org.signal.core.util.select
+import org.signal.core.util.update
 import org.signal.core.util.withinTransaction
 import org.thoughtcrime.securesms.database.model.DistributionListId
 import org.thoughtcrime.securesms.database.model.DistributionListPrivacyData
@@ -410,11 +411,8 @@ class DistributionListTables constructor(context: Context?, databaseHelper: Sign
     }
 
     return when (privacyMode) {
-      DistributionListPrivacyMode.ALL -> {
-        SignalDatabase.recipients
-          .getSignalContacts(false)!!
-          .readToList { it.requireObject(RecipientTable.ID, RecipientId.SERIALIZER) }
-      }
+      DistributionListPrivacyMode.ALL -> emptyList()
+      DistributionListPrivacyMode.ONLY_WITH -> rawMembers
       DistributionListPrivacyMode.ALL_EXCEPT -> {
         SignalDatabase.recipients
           .getSignalContacts(false)!!
@@ -423,7 +421,6 @@ class DistributionListTables constructor(context: Context?, databaseHelper: Sign
             mapper = { it.requireObject(RecipientTable.ID, RecipientId.SERIALIZER) }
           )
       }
-      DistributionListPrivacyMode.ONLY_WITH -> rawMembers
     }
   }
 
@@ -476,7 +473,7 @@ class DistributionListTables constructor(context: Context?, databaseHelper: Sign
     }
   }
 
-  private fun getPrivacyMode(listId: DistributionListId): DistributionListPrivacyMode {
+  fun getPrivacyMode(listId: DistributionListId): DistributionListPrivacyMode {
     return readableDatabase
       .select(ListTable.PRIVACY_MODE)
       .from(ListTable.TABLE_NAME)
@@ -524,10 +521,11 @@ class DistributionListTables constructor(context: Context?, databaseHelper: Sign
   }
 
   override fun remapRecipient(oldId: RecipientId, newId: RecipientId) {
-    val values = ContentValues().apply {
-      put(MembershipTable.RECIPIENT_ID, newId.serialize())
-    }
-    writableDatabase.update(MembershipTable.TABLE_NAME, values, "${MembershipTable.RECIPIENT_ID} = ?", SqlUtil.buildArgs(oldId))
+    writableDatabase
+      .update(MembershipTable.TABLE_NAME)
+      .values(MembershipTable.RECIPIENT_ID to newId.serialize())
+      .where("${MembershipTable.RECIPIENT_ID} = ?", oldId)
+      .run(SQLiteDatabase.CONFLICT_REPLACE)
   }
 
   fun deleteList(distributionListId: DistributionListId, deletionTimestamp: Long = System.currentTimeMillis()) {
