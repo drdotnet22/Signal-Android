@@ -115,7 +115,7 @@ class GiftFlowConfirmationFragment :
 
     val continueButton = requireView().findViewById<MaterialButton>(R.id.continue_button)
     continueButton.setOnClickListener {
-      lifecycleDisposable += viewModel.insertInAppPayment(requireContext()).subscribe { inAppPayment ->
+      lifecycleDisposable += viewModel.insertInAppPayment().subscribe { inAppPayment ->
         findNavController().safeNavigate(
           GiftFlowConfirmationFragmentDirections.actionGiftFlowConfirmationFragmentToGatewaySelectorBottomSheet(
             inAppPayment
@@ -313,4 +313,8 @@ class GiftFlowConfirmationFragment :
   override fun onUserLaunchedAnExternalApplication() = error("Not supported for gifts.")
 
   override fun navigateToDonationPending(inAppPayment: InAppPaymentTable.InAppPayment) = error("Not supported for gifts")
+
+  override fun exitCheckoutFlow() {
+    requireActivity().finishAfterTransition()
+  }
 }

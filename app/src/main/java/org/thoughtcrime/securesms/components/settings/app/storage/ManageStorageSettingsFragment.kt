@@ -5,6 +5,7 @@
 
 package org.thoughtcrime.securesms.components.settings.app.storage
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -61,12 +63,15 @@ import org.signal.core.ui.SignalPreview
 import org.signal.core.ui.Texts
 import org.signal.core.ui.theme.SignalTheme
 import org.thoughtcrime.securesms.R
+import org.thoughtcrime.securesms.billing.upgrade.UpgradeToEnableOptimizedStorageSheet
+import org.thoughtcrime.securesms.billing.upgrade.UpgradeToPaidTierBottomSheet
 import org.thoughtcrime.securesms.compose.ComposeFragment
 import org.thoughtcrime.securesms.database.MediaTable
 import org.thoughtcrime.securesms.keyvalue.KeepMessagesDuration
 import org.thoughtcrime.securesms.mediaoverview.MediaOverviewActivity
 import org.thoughtcrime.securesms.preferences.widgets.StorageGraphView
 import org.thoughtcrime.securesms.recipients.Recipient
+import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.thoughtcrime.securesms.util.Util
 import org.thoughtcrime.securesms.util.viewModel
@@ -79,6 +84,13 @@ class ManageStorageSettingsFragment : ComposeFragment() {
 
   private val viewModel by viewModel<ManageStorageSettingsViewModel> { ManageStorageSettingsViewModel() }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    UpgradeToPaidTierBottomSheet.addResultListener(this) {
+      viewModel.setOptimizeStorage(true)
+    }
+  }
+
+  @ExperimentalMaterial3Api
   @Composable
   override fun FragmentContent() {
     val state by viewModel.state.collectAsState()
@@ -102,7 +114,16 @@ class ManageStorageSettingsFragment : ComposeFragment() {
             onSetKeepMessages = { navController.navigate("set-keep-messages") },
             onSetChatLengthLimit = { navController.navigate("set-chat-length-limit") },
             onSyncTrimThreadDeletes = { viewModel.setSyncTrimDeletes(it) },
-            onDeleteChatHistory = { navController.navigate("confirm-delete-chat-history") }
+            onDeleteChatHistory = { navController.navigate("confirm-delete-chat-history") },
+            onToggleOnDeviceStorageOptimization = { enabled ->
+              if (state.isPaidTierPending) {
+                navController.navigate("paid-tier-pending")
+              } else if (state.onDeviceStorageOptimizationState == ManageStorageSettingsViewModel.OnDeviceStorageOptimizationState.REQUIRES_PAID_TIER) {
+                UpgradeToEnableOptimizedStorageSheet().show(parentFragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG)
+              } else {
+                viewModel.setOptimizeStorage(enabled)
+              }
+            }
           )
         }
 
@@ -218,6 +239,19 @@ class ManageStorageSettingsFragment : ComposeFragment() {
             onDismiss = { navController.popBackStack() }
           )
         }
+
+        dialog(
+          route = "paid-tier-pending"
+        ) {
+          // TODO [backups] Finalized copy
+          Dialogs.SimpleAlertDialog(
+            title = "Paid tier pending",
+            body = "TODO",
+            confirm = stringResource(android.R.string.ok),
+            onConfirm = {},
+            onDismiss = { navController.popBackStack() }
+          )
+        }
       }
     }
   }
@@ -236,7 +270,8 @@ private fun ManageStorageSettingsScreen(
   onSetKeepMessages: () -> Unit = {},
   onSetChatLengthLimit: () -> Unit = {},
   onSyncTrimThreadDeletes: (Boolean) -> Unit = {},
-  onDeleteChatHistory: () -> Unit = {}
+  onDeleteChatHistory: () -> Unit = {},
+  onToggleOnDeviceStorageOptimization: (Boolean) -> Unit = {}
 ) {
   Scaffolds.Settings(
     title = stringResource(id = R.string.preferences__storage),
@@ -251,6 +286,19 @@ private fun ManageStorageSettingsScreen(
       Texts.SectionHeader(text = stringResource(id = R.string.preferences_storage__storage_usage))
 
       StorageOverview(state.breakdown, onReviewStorage)
+
+      if (state.onDeviceStorageOptimizationState > ManageStorageSettingsViewModel.OnDeviceStorageOptimizationState.FEATURE_NOT_AVAILABLE) {
+        Dividers.Default()
+
+        Texts.SectionHeader(text = stringResource(id = R.string.ManageStorageSettingsFragment__on_device_storage))
+
+        Rows.ToggleRow(
+          checked = state.onDeviceStorageOptimizationState == ManageStorageSettingsViewModel.OnDeviceStorageOptimizationState.ENABLED,
+          text = stringResource(id = R.string.ManageStorageSettingsFragment__optimize_on_device_storage),
+          label = stringResource(id = R.string.ManageStorageSettingsFragment__unused_media_will_be_offloaded),
+          onCheckChanged = onToggleOnDeviceStorageOptimization
+        )
+      }
 
       Dividers.Default()
 
@@ -510,7 +558,9 @@ private fun ManageStorageSettingsScreenPreview() {
     ManageStorageSettingsScreen(
       state = ManageStorageSettingsViewModel.ManageStorageState(
         keepMessagesDuration = KeepMessagesDuration.FOREVER,
-        lengthLimit = ManageStorageSettingsViewModel.ManageStorageState.NO_LIMIT
+        lengthLimit = ManageStorageSettingsViewModel.ManageStorageState.NO_LIMIT,
+        syncTrimDeletes = true,
+        onDeviceStorageOptimizationState = ManageStorageSettingsViewModel.OnDeviceStorageOptimizationState.DISABLED
       )
     )
   }

@@ -5,14 +5,13 @@
 
 package org.thoughtcrime.securesms.backup.v2.ui
 
-import androidx.compose.foundation.background
+import android.content.DialogInterface
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,32 +23,56 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import org.signal.core.ui.BottomSheets
 import org.signal.core.ui.Buttons
-import org.signal.core.ui.Icons
 import org.signal.core.ui.Previews
 import org.signal.core.ui.SignalPreview
 import org.thoughtcrime.securesms.R
-import org.thoughtcrime.securesms.components.settings.app.AppSettingsActivity
 import org.thoughtcrime.securesms.compose.ComposeBottomSheetDialogFragment
 import org.thoughtcrime.securesms.jobs.BackupMessagesJob
 
 /**
  * Bottom sheet allowing the user to immediately start a backup or delay.
+ *
+ * If the result key is true, then the user has enqueued a backup and should be directed to the
+ * remote backup settings screen.
  */
 class CreateBackupBottomSheet : ComposeBottomSheetDialogFragment() {
+
+  companion object {
+    const val REQUEST_KEY = "CreateBackupBottomSheet"
+  }
+
+  private var isResultSet = false
+
   @Composable
   override fun SheetContent() {
     CreateBackupBottomSheetContent(
       onBackupNowClick = {
         BackupMessagesJob.enqueue()
-        startActivity(AppSettingsActivity.remoteBackups(requireContext()))
+        setFragmentResult(REQUEST_KEY, bundleOf(REQUEST_KEY to Result.BACKUP_STARTED))
+        isResultSet = true
         dismissAllowingStateLoss()
       },
       onBackupLaterClick = {
         dismissAllowingStateLoss()
       }
     )
+  }
+
+  enum class Result {
+    BACKUP_STARTED,
+    BACKUP_DELAYED
+  }
+
+  override fun onDismiss(dialog: DialogInterface) {
+    if (!isResultSet) {
+      setFragmentResult(REQUEST_KEY, bundleOf(REQUEST_KEY to Result.BACKUP_DELAYED))
+    }
+
+    super.onDismiss(dialog)
   }
 }
 
@@ -61,26 +84,24 @@ private fun CreateBackupBottomSheetContent(
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxWidth()
+      .padding(horizontal = dimensionResource(R.dimen.core_ui__gutter))
+      .padding(bottom = 24.dp)
   ) {
     BottomSheets.Handle()
 
-    Icons.BrushedForeground(
-      painter = painterResource(id = R.drawable.symbol_backup_light),
-      foregroundBrush = BackupsIconColors.Normal.foreground,
+    Image(
+      painter = painterResource(id = R.drawable.image_signal_backups),
       contentDescription = null,
       modifier = Modifier
         .padding(top = 18.dp, bottom = 11.dp)
-        .size(88.dp)
-        .background(
-          color = BackupsIconColors.Normal.background,
-          shape = CircleShape
-        )
-        .padding(20.dp)
+        .size(80.dp)
+        .padding(4.dp)
     )
 
     Text(
-      text = stringResource(id = R.string.CreateBackupBottomSheet__create_backup),
-      style = MaterialTheme.typography.titleLarge
+      text = stringResource(id = R.string.CreateBackupBottomSheet__you_are_all_set),
+      style = MaterialTheme.typography.titleLarge,
+      textAlign = TextAlign.Center
     )
 
     Text(
@@ -90,33 +111,24 @@ private fun CreateBackupBottomSheetContent(
       textAlign = TextAlign.Center,
       modifier = Modifier
         .padding(top = 8.dp, bottom = 64.dp)
-        .padding(horizontal = dimensionResource(id = R.dimen.core_ui__gutter))
     )
 
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 31.dp)
+    Buttons.LargeTonal(
+      onClick = onBackupNowClick,
+      modifier = Modifier.widthIn(min = 220.dp)
     ) {
-      TextButton(
-        onClick = onBackupLaterClick,
-        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.core_ui__gutter))
-      ) {
-        Text(
-          text = stringResource(id = R.string.CreateBackupBottomSheet__back_up_later)
-        )
-      }
+      Text(
+        text = stringResource(id = R.string.CreateBackupBottomSheet__back_up_now)
+      )
+    }
 
-      Spacer(modifier = Modifier.weight(1f))
-
-      Buttons.LargeTonal(
-        onClick = onBackupNowClick,
-        modifier = Modifier.padding(end = dimensionResource(id = R.dimen.core_ui__gutter))
-      ) {
-        Text(
-          text = stringResource(id = R.string.CreateBackupBottomSheet__back_up_now)
-        )
-      }
+    TextButton(
+      onClick = onBackupLaterClick,
+      modifier = Modifier.widthIn(min = 220.dp).padding(top = 16.dp)
+    ) {
+      Text(
+        text = stringResource(id = R.string.CreateBackupBottomSheet__back_up_later)
+      )
     }
   }
 }

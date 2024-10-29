@@ -58,7 +58,7 @@ class VitalsViewModel(private val context: Application) : AndroidViewModel(conte
         return@fromCallable State.PROMPT_SPECIFIC_BATTERY_SAVER_DIALOG
       }
 
-      if (deviceSpecificCondition == ShowCondition.HAS_SLOW_NOTIFICATIONS && SlowNotificationHeuristics.shouldPromptBatterySaver()) {
+      if (deviceSpecificCondition == ShowCondition.HAS_SLOW_NOTIFICATIONS && SlowNotificationHeuristics.shouldShowDeviceSpecificDialog() && SlowNotificationHeuristics.isHavingDelayedNotifications()) {
         return@fromCallable State.PROMPT_SPECIFIC_BATTERY_SAVER_DIALOG
       }
 
@@ -73,7 +73,7 @@ class VitalsViewModel(private val context: Application) : AndroidViewModel(conte
       val timeSinceLastConnection = System.currentTimeMillis() - SignalStore.misc.lastWebSocketConnectTime
       val timeSinceLastConnectionWarning = System.currentTimeMillis() - SignalStore.misc.lastConnectivityWarningTime
 
-      if (ConnectivityWarning.isEnabled && timeSinceLastConnection > ConnectivityWarning.threshold && timeSinceLastConnectionWarning > 14.days.inWholeMilliseconds && NetworkUtil.isConnected(context)) {
+      if (ConnectivityWarning.isEnabled && timeSinceLastConnection > ConnectivityWarning.threshold && timeSinceLastConnectionWarning > 14.days.inWholeMilliseconds && NetworkUtil.isConnected(context) && SignalStore.account.isRegistered) {
         return@fromCallable if (ConnectivityWarning.isDebugPromptEnabled) {
           State.PROMPT_DEBUGLOGS_FOR_CONNECTIVITY_WARNING
         } else {

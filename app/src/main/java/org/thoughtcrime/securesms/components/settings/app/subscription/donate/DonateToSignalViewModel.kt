@@ -119,6 +119,8 @@ class DonateToSignalViewModel(
 
   fun updateSubscription() {
     val snapshot = store.state
+
+    check(snapshot.canUpdate)
     if (snapshot.areFieldsEnabled) {
       actionDisposable += createInAppPayment(snapshot).subscribeBy {
         _actions.onNext(DonateToSignalAction.UpdateSubscription(it, snapshot.isUpdateLongRunning))
@@ -204,7 +206,6 @@ class DonateToSignalViewModel(
         endOfPeriod = null,
         inAppPaymentData = InAppPaymentData(
           badge = snapshot.badge?.let { Badges.toDatabaseBadge(it) },
-          label = snapshot.badge?.description ?: "",
           amount = amount.toFiatValue(),
           level = snapshot.level.toLong(),
           recipientId = Recipient.self().id.serialize(),
@@ -392,7 +393,13 @@ class DonateToSignalViewModel(
           if (selectedCurrency !in priceCurrencies) {
             Log.w(TAG, "Unsupported currency selection. Defaulting to USD. $selectedCurrency isn't supported.")
             val usd = PlatformCurrencyUtil.USD
-            val newSubscriber = InAppPaymentsRepository.getSubscriber(usd, InAppPaymentSubscriberRecord.Type.DONATION) ?: InAppPaymentSubscriberRecord(SubscriberId.generate(), usd, InAppPaymentSubscriberRecord.Type.DONATION, false, InAppPaymentData.PaymentMethodType.UNKNOWN)
+            val newSubscriber = InAppPaymentsRepository.getSubscriber(usd, InAppPaymentSubscriberRecord.Type.DONATION) ?: InAppPaymentSubscriberRecord(
+              subscriberId = SubscriberId.generate(),
+              currency = usd,
+              type = InAppPaymentSubscriberRecord.Type.DONATION,
+              requiresCancel = false,
+              paymentMethodType = InAppPaymentData.PaymentMethodType.UNKNOWN
+            )
             InAppPaymentsRepository.setSubscriber(newSubscriber)
             RecurringInAppPaymentRepository.syncAccountRecord().subscribe()
           }

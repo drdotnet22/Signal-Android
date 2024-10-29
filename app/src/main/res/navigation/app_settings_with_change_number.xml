@@ -11,6 +11,13 @@
         android:label="app_settings_fragment"
         tools:layout="@layout/dsl_settings_fragment">
         <action
+            android:id="@+id/action_appSettingsFragment_to_backupsSettingsFragment"
+            app:destination="@id/backupsSettingsFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+        <action
             android:id="@+id/action_appSettingsFragment_to_usernameLinkSettingsFragment"
             app:destination="@id/username_link_settings"
             app:enterAnim="@anim/fragment_open_enter"
@@ -32,13 +39,6 @@
         <action
             android:id="@+id/action_appSettingsFragment_to_accountSettingsFragment"
             app:destination="@id/accountSettingsFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
-        <action
-            android:id="@+id/action_appSettingsFragment_to_deviceActivity"
-            app:destination="@id/deviceActivity"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
@@ -225,13 +225,7 @@
 
     <!-- endregion -->
 
-    <!-- Linked Devices V1-->
-    <activity
-        android:id="@+id/deviceActivity"
-        android:name="org.thoughtcrime.securesms.DeviceActivity"
-        android:label="device_activity" />
-
-    <!-- Linked Devices V2 -->
+    <!-- Linked Devices -->
     <fragment
         android:id="@+id/linkDeviceFragment"
         android:name="org.thoughtcrime.securesms.linkdevice.LinkDeviceFragment"
@@ -249,6 +243,9 @@
         <action
             android:id="@+id/action_linkDeviceFragment_to_linkDeviceLearnMoreBottomSheet"
             app:destination="@id/linkDeviceLearnMoreBottomSheet" />
+        <action
+            android:id="@+id/action_linkDeviceFragment_to_linkDeviceEducationSheet"
+            app:destination="@id/linkDeviceEducationSheet" />
     </fragment>
     <dialog
         android:id="@+id/linkDeviceFinishedSheet"
@@ -256,6 +253,9 @@
     <dialog
         android:id="@+id/linkDeviceLearnMoreBottomSheet"
         android:name="org.thoughtcrime.securesms.linkdevice.LinkDeviceLearnMoreBottomSheetFragment" />
+    <dialog
+        android:id="@+id/linkDeviceEducationSheet"
+        android:name="org.thoughtcrime.securesms.linkdevice.LinkDeviceEducationSheet" />
 
     <fragment
         android:id="@+id/addLinkDeviceFragment"
@@ -346,6 +346,13 @@
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
         <action
+            android:id="@+id/action_chatsSettingsFragment_to_chatFoldersFragment"
+            app:destination="@id/chatFoldersFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+        <action
             android:id="@+id/action_chatsSettingsFragment_to_remoteBackupsSettingsFragment"
             app:destination="@id/remoteBackupsSettingsFragment"
             app:enterAnim="@anim/fragment_open_enter"
@@ -365,6 +372,61 @@
         android:name="org.thoughtcrime.securesms.reactions.edit.EditReactionsFragment"
         android:label="edit_reactions_fragment"
         tools:layout="@layout/edit_reactions_fragment" />
+
+    <fragment
+        android:id="@+id/chatFoldersFragment"
+        android:name="org.thoughtcrime.securesms.components.settings.app.chats.folders.ChatFoldersFragment"
+        android:label="chat_folders_fragment">
+        <action
+            android:id="@+id/action_chatFoldersFragment_to_createFoldersFragment"
+            app:destination="@id/createFoldersFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+        <action
+            android:id="@+id/action_chatFoldersFragment_to_chatFoldersEducationSheet"
+            app:destination="@id/chatFoldersEducationSheet" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/chatFoldersEducationSheet"
+        android:name="org.thoughtcrime.securesms.components.settings.app.chats.folders.ChatFoldersEducationSheet"/>
+
+    <fragment
+        android:id="@+id/createFoldersFragment"
+        android:name="org.thoughtcrime.securesms.components.settings.app.chats.folders.CreateFoldersFragment"
+        android:label="create_folders_fragment">
+
+        <argument
+            android:name="folder_id"
+            app:argType="long" />
+
+        <argument
+            android:name="thread_id"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_createFoldersFragment_to_chooseChatsFragment"
+            app:destination="@id/chooseChatsFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit">
+            <argument
+                android:name="include_chats"
+                app:argType="boolean" />
+        </action>
+
+        <action
+            android:id="@+id/action_createFoldersFragment_to_chatFoldersEducationSheet"
+            app:destination="@id/chatFoldersEducationSheet" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chooseChatsFragment"
+        android:name="org.thoughtcrime.securesms.components.settings.app.chats.folders.ChooseChatsFragment"
+        android:label="choose_chats_fragment" />
 
     <!-- endregion -->
 
@@ -532,17 +594,13 @@
         app:popEnterAnim="@anim/fragment_close_enter"
         app:popExitAnim="@anim/fragment_close_exit"
         app:popUpTo="@id/app_settings"
-        app:popUpToInclusive="true" />
+        app:popUpToInclusive="true">
 
-    <action
-        android:id="@+id/action_direct_to_checkout"
-        app:destination="@id/checkoutFlowActivity"
-        app:enterAnim="@anim/fragment_open_enter"
-        app:exitAnim="@anim/fragment_open_exit"
-        app:popEnterAnim="@anim/fragment_close_enter"
-        app:popExitAnim="@anim/fragment_close_exit"
-        app:popUpTo="@id/app_settings"
-        app:popUpToInclusive="true" />
+        <argument
+            android:name="direct_to_checkout_type"
+            android:defaultValue="UNKNOWN"
+            app:argType="org.signal.donations.InAppPaymentType" />
+    </action>
 
     <action
         android:id="@+id/action_direct_to_notificationProfiles"
@@ -620,6 +678,22 @@
     <action
         android:id="@+id/action_direct_to_remoteBackupsSettingsFragment"
         app:destination="@id/remoteBackupsSettingsFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit"
+        app:popEnterAnim="@anim/fragment_close_enter"
+        app:popExitAnim="@anim/fragment_close_exit" />
+
+    <action
+        android:id="@+id/action_direct_to_chatFoldersFragment"
+        app:destination="@id/chatFoldersFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit"
+        app:popEnterAnim="@anim/fragment_close_enter"
+        app:popExitAnim="@anim/fragment_close_exit" />
+
+    <action
+        android:id="@+id/action_direct_to_createFoldersFragment"
+        app:destination="@id/createFoldersFragment"
         app:enterAnim="@anim/fragment_open_enter"
         app:exitAnim="@anim/fragment_open_exit"
         app:popEnterAnim="@anim/fragment_close_enter"
@@ -741,13 +815,10 @@
         <action
             android:id="@+id/action_manageDonationsFragment_to_subscribeLearnMoreBottomSheetDialog"
             app:destination="@id/subscribeLearnMoreBottomSheetDialog" />
-        <action
-            android:id="@+id/action_manageDonationsFragment_to_donateToSignalFragment"
-            app:destination="@id/checkoutFlowActivity"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
+        <argument
+            android:name="direct_to_checkout_type"
+            android:defaultValue="UNKNOWN"
+            app:argType="org.signal.donations.InAppPaymentType" />
     </fragment>
 
     <fragment
@@ -967,55 +1038,50 @@
     </fragment>
 
     <fragment
+        android:id="@+id/backupsSettingsFragment"
+        android:name="org.thoughtcrime.securesms.components.settings.app.backups.BackupsSettingsFragment">
+
+        <action
+            android:id="@+id/action_backupsSettingsFragment_to_backupsPreferenceFragment"
+            app:destination="@id/backupsPreferenceFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
+        <action
+            android:id="@+id/action_backupsSettingsFragment_to_remoteBackupsSettingsFragment"
+            app:destination="@id/remoteBackupsSettingsFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/remoteBackupsSettingsFragment"
-        android:name="org.thoughtcrime.securesms.components.settings.app.chats.backups.RemoteBackupsSettingsFragment">
+        android:name="org.thoughtcrime.securesms.components.settings.app.backups.remote.RemoteBackupsSettingsFragment">
 
         <action
-            android:id="@+id/action_remoteBackupsSettingsFragment_to_backupsTypeSettingsFragment"
-            app:destination="@id/backupsTypeSettingsFragment"
+            android:id="@+id/action_remoteBackupsSettingsFragment_to_backupKeyDisplayFragment"
+            app:destination="@id/backupKeyDisplayFragment"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
 
-        <action
-            android:id="@+id/action_remoteBackupsSettingsFragment_to_remoteBackupsPaymentHistoryFragment"
-            app:destination="@id/remoteBackupsPaymentHistoryFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
+        <argument
+            android:name="backup_later_selected"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
-        android:id="@+id/remoteBackupsPaymentHistoryFragment"
-        android:name="org.thoughtcrime.securesms.components.settings.app.chats.backups.history.RemoteBackupsPaymentHistoryFragment">
-    </fragment>
-
-    <fragment
-        android:id="@+id/backupsTypeSettingsFragment"
-        android:name="org.thoughtcrime.securesms.components.settings.app.chats.backups.type.BackupsTypeSettingsFragment">
-
-        <action
-            android:id="@+id/action_backupsTypeSettingsFragment_to_remoteBackupsPaymentHistoryFragment"
-            app:destination="@id/remoteBackupsPaymentHistoryFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
-    </fragment>
+        android:id="@+id/backupKeyDisplayFragment"
+        android:name="org.thoughtcrime.securesms.components.settings.app.backups.remote.BackupKeyDisplayFragment" />
 
     <include app:graph="@navigation/username_link_settings" />
     <include app:graph="@navigation/story_privacy_settings" />
-
-    <activity
-        android:id="@+id/checkoutFlowActivity"
-        android:name="org.thoughtcrime.securesms.components.settings.app.subscription.donate.CheckoutFlowActivity"
-        android:label="checkout_flow_activity">
-
-        <argument
-            android:name="in_app_payment_type"
-            app:argType="org.signal.donations.InAppPaymentType" />
-    </activity>
 
 </navigation>

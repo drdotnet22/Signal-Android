@@ -22,6 +22,9 @@
   <!-- Removed by excludeNonTranslatables <string name="pending_transfer_url" translatable="false">https://support.signal.org/hc/articles/360031949872#pending</string> -->
   <!-- Removed by excludeNonTranslatables <string name="donate_faq_url" translatable="false">https://support.signal.org/hc/articles/360031949872#donate</string> -->
 
+    <!-- First placeholder is productId, second placeholder is app package -->
+    <string name="backup_subscription_management_url">https://play.google.com/store/account/subscriptions?sku=%1$s&amp;package=%2$s</string>
+
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="delete">Usuń</string>
@@ -88,6 +91,20 @@
     <!-- Text for a button prompting users to allow Signal access to their gallery storage -->
     <string name="AttachmentKeyboard_allow_access">Zezwól</string>
     <string name="AttachmentKeyboard_payment">Płatność</string>
+    <!-- Text in a button that allows users to manage which media Signal has access to -->
+    <string name="AttachmentKeyboard_manage">Zarządzaj</string>
+    <!-- Option in menu to select more photos that Signal will have access to -->
+    <string name="AttachmentKeyboard_select_more_photos">Wybierz więcej zdjęć</string>
+    <!-- Option in menu to go to settings -->
+    <string name="AttachmentKeyboard_go_to_settings">Przejdź do ustawień</string>
+    <!-- Text explaining that Signal has limited access to photos -->
+    <string name="AttachmentKeyboard_signal_has_limited_access">Signal ma ograniczony dostęp do zdjęć i filmów</string>
+    <!-- Text shown when user has given no photos for Signal to access and an explanation on how to change those permissions -->
+    <string name="AttachmentKeyboard_no_photos_found">Nie znaleziono zdjęć. Wybierz zdjęcia i filmy, które mają się tu pojawić, lub zmień uprawnienia</string>
+
+    <!-- MediaGalleryFragment -->
+    <!-- Text describing that no photos or videos are currently found in the gallery and that Signal can only access media that the user allows -->
+    <string name="MediaGalleryFragment__no_photos_found">Nie znaleziono zdjęć ani filmów. Signal ma dostęp tylko do wybranych przez Ciebie zdjęć i wideo.</string>
 
     <!-- AttachmentManager -->
     <string name="AttachmentManager_cant_open_media_selection">Nie można znaleźć aplikacji, aby otworzyć te multimedia.</string>
@@ -232,15 +249,15 @@
     </plurals>
     <!-- Unknown people row, placeholder is the number of unknown people in the call -->
     <plurals name="CallInfoView__plus_d_people">
-        <item quantity="one">+%1$d person</item>
-        <item quantity="few">+%1$d people</item>
-        <item quantity="many">+%1$d people</item>
-        <item quantity="other">+%1$d people</item>
+        <item quantity="one">+%1$d osoba</item>
+        <item quantity="few">+%1$d osoby</item>
+        <item quantity="many">+%1$d osób</item>
+        <item quantity="other">+%1$d osób</item>
     </plurals>
     <!-- Unknown people row icon content description -->
     <string name="CallInfoView__more_information">Więcej informacji</string>
     <!-- Unknown people row info dialog message -->
-    <string name="CallInfoView__before_joining_a_call">Before joining a call you can only see the names of phone contacts, people you\'re in a group with, or people you\'ve chatted with 1:1. You\'ll see all names and photos once you\'ve joined the call.</string>
+    <string name="CallInfoView__before_joining_a_call">Przed dołączeniem do rozmowy zobaczysz tylko nazwy kontaktów z telefonu, osób, z którymi jesteś w grupie, lub osób, z którymi zdarzyło Ci się rozmawiać 1:1. Wszystkie imiona i nazwiska oraz zdjęcia zobaczysz po dołączeniu do rozmowy.</string>
     <!-- Unknown people row info dialog action to close the dialog -->
     <string name="CallInfoView__got_it">Rozumiem</string>
 
@@ -250,6 +267,7 @@
 
     <!-- CameraXFragment -->
     <string name="CameraXFragment_tap_for_photo_hold_for_video">Dotknij, aby zrobić zdjęcie. Przytrzymaj, aby nagrać wideo.</string>
+    <!-- Accessibility content description to describe the capture button when taking an image/video -->
     <string name="CameraXFragment_capture_description">Zrób zdjęcie</string>
     <string name="CameraXFragment_change_camera_description">Zmień aparat</string>
     <string name="CameraXFragment_open_gallery_description">Otwórz galerię</string>
@@ -337,6 +355,8 @@
     <string name="CommunicationActions_invalid_link">Nieprawidłowy link</string>
     <!-- Message on dialog when call link url cannot be parsed -->
     <string name="CommunicationActions_this_is_not_a_valid_call_link">Ten link jest nieprawidłowy. Upewnij się, że link nie został ucięty i jest poprawny, zanim spróbujesz dołączyć.</string>
+    <!-- Displayed in a snackbar when the user is already in a call -->
+    <string name="CommunicationActions__you_are_already_in_a_call">Uczestniczysz już w rozmowie</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -354,6 +374,8 @@
     <string name="ContactsCursorLoader__chats">Czaty</string>
     <!-- Header for conversation search section labeled "Messages" -->
     <string name="ContactsCursorLoader__messages">Wiadomości</string>
+    <!-- Header for conversation search section labeled "Chat types" -->
+    <string name="ContactsCursorLoader__chat_types">Rodzaje czatu</string>
 
     <!-- ContactsDatabase -->
     <string name="ContactsDatabase_message_s">Wiadomość %1$s</string>
@@ -393,6 +415,7 @@
     <string name="ConversationItem_unable_to_open_media">Nie można znaleźć aplikacji, aby otworzyć te multimedia.</string>
     <string name="ConversationItem_copied_text">Skopiowano %1$s</string>
     <string name="ConversationItem_from_s">od %1$s</string>
+    <!-- Footer shown in legacy SMS message where %s is the name of the recipient the message is going to -->
     <string name="ConversationItem_to_s">do %1$s</string>
     <string name="ConversationItem_read_more">  Czytaj dalej</string>
     <string name="ConversationItem_download_more">  Pobierz więcej</string>
@@ -426,6 +449,7 @@
     <string name="ConversationActivity_send_edit">Wyślij edycję</string>
     <string name="ConversationActivity_compose_message">Nowa wiadomość</string>
     <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Przepraszamy, wystąpił błąd podczas dodawania załącznika.</string>
+    <!-- Toast shown when user is unable to find the recipient when sending a message -->
     <string name="ConversationActivity_recipient_is_not_a_valid_sms_or_email_address_exclamation">Podany numer lub adres e-mail jest niepoprawny!</string>
     <string name="ConversationActivity_message_is_empty_exclamation">Wiadomość jest pusta!</string>
     <string name="ConversationActivity_group_members">Członkowie grupy</string>
@@ -473,7 +497,7 @@
     <!-- Dialog title asking users for microphone permission -->
     <string name="ConversationActivity_allow_access_microphone">Zezwól na dostęp do mikrofonu</string>
     <!-- Dialog description that will explain the steps needed to give microphone permissions -->
-    <string name="ConversationActivity_signal_to_send_audio_messages">Aby wysłać wiadomości audio:</string>
+    <string name="ConversationActivity_signal_to_send_audio_messages">Aby wysłać wiadomość głosową:</string>
     <!-- Alert dialog description asking for microphone permission in order to send voice messages -->
     <string name="ConversationActivity_to_send_voice_messages_allow_signal_access_to_your_microphone">Aby wysyłać wiadomości głosowe, zezwól Signal na dostęp do mikrofonu.</string>
     <!-- Toast text explaining Signal\'s need for microphone access -->
@@ -582,6 +606,7 @@
         <item quantity="other">Zapisywanie %1$d załączników na dysku…</item>
     </plurals>
     <string name="ConversationFragment_pending">Oczekiwanie…</string>
+    <!-- Describes how the message was sent when looking at a message detail. Previously, messages could be through other means like SMS -->
     <string name="ConversationFragment_push">Dane (Signal)</string>
     <string name="ConversationFragment_mms">MMS</string>
     <string name="ConversationFragment_sms">SMS</string>
@@ -754,6 +779,17 @@
         <item quantity="many">%1$d wybranych</item>
         <item quantity="other">%1$d wybrane</item>
     </plurals>
+    <!-- Context menu option to add a chat to a folder -->
+    <string name="ConversationListFragment_add_to_folder">Dodaj do folderu</string>
+    <!-- Context menu option to remove a chat from a folder -->
+    <string name="ConversationListFragment_remove_from_folder">Usuń z folderu</string>
+
+    <!-- Bottom sheet title when choosing a folder to add a chat to -->
+    <string name="AddToFolderBottomSheet_choose_a_folder">Wybierz folder</string>
+    <!-- Toast shown when a chat has been added to a folder, where %s is the name of the folder -->
+    <string name="AddToFolderBottomSheet_added_to_s">Dodano do „%1$s”</string>
+    <!-- Toast shown when a user tries to add a chat to a folder, but the folder already has that chat. %s is the name of the folder -->
+    <string name="AddToFolderBottomSheet_this_chat_is_already">This chat is already in the folder \"%1$s\"</string>
 
     <!-- Show in conversation list overflow menu to open selection bottom sheet -->
     <string name="ConversationListFragment__notification_profile">Profil powiadomień</string>
@@ -833,13 +869,48 @@
 
     <!-- CreateBackupBottomSheet -->
     <!-- Bottom sheet title -->
-    <string name="CreateBackupBottomSheet__create_backup">Utwórz kopię zapasową</string>
+    <string name="CreateBackupBottomSheet__you_are_all_set">Wszystko gotowe. Możesz rozpocząć tworzenie kopii zapasowej.</string>
     <!-- Bottom sheet message -->
-    <string name="CreateBackupBottomSheet__depending_on_the_size">Depending on the size of your backup, this could take a long time. You can use your phone as you normally do while the backup takes place.</string>
+    <string name="CreateBackupBottomSheet__depending_on_the_size">W przypadku dużej ilości danych proces tworzenia kopii zapasowej może zająć sporo czasu. Podczas tworzenia kopii zapasowej możesz normalnie korzystać z telefonu.</string>
     <!-- Action button to dismiss sheet and back up later -->
-    <string name="CreateBackupBottomSheet__back_up_later">Back up later</string>
+    <string name="CreateBackupBottomSheet__back_up_later">Utwórz kopię zapasową później</string>
     <!-- Action button to dismiss sheet and back up now -->
     <string name="CreateBackupBottomSheet__back_up_now">Archiwizuj teraz</string>
+
+    <!-- Headline text for a bottom sheet dialog shown when the restoration of the media backup fails. -->
+    <string name="RestoreMediaFailedBottomSheet__Cant_restore_media">Nie można przywrócić multimediów</string>
+    <!-- Help text for a bottom sheet dialog shown when the restoration of the media backup fails, displayed while the app is calculating the amount of disk space required. -->
+    <string name="RestoreMediaFailedBottomSheet__Your_device_does_not_have_enough_free_space_placeholder">Na Twoim urządzeniu nie ma wystarczającej ilości wolnego miejsca. Aby przywrócić multimedia, zwolnij miejsce.\n\nJeśli wybierzesz opcję „Pomiń przywracanie”, multimedia z kopii zapasowej zostaną usunięte przy następnym tworzeniu kopii zapasowej przez Twoje urządzenie.</string>
+    <!-- Help text for a bottom sheet dialog shown when the restoration of the media backup fails, displayed once the app knows how much disk space is required. The placeholder is a filesize, such as "1.23 GB." -->
+    <string name="RestoreMediaFailedBottomSheet__Your_device_does_not_have_enough_free_space">Na Twoim urządzeniu nie ma wystarczającej ilości wolnego miejsca. Aby przywrócić multimedia, zwolnij %1$s miejsca.\n\nJeśli wybierzesz opcję „Pomiń przywracanie”, multimedia z kopii zapasowej zostaną usunięte przy następnym tworzeniu kopii zapasowej przez Twoje urządzenie.</string>
+    <!-- Confirmation button to dismiss bottom sheet dialog without aborting the restoration process. -->
+    <string name="RestoreMediaFailedBottomSheet__Okay">OK</string>
+    <!-- Negative button on a bottom sheet dialog shown when the restoration of the media backup fails. This aborts the restoration process. -->
+    <string name="RestoreMediaFailedBottomSheet__Skip_restore">Pomiń przywracanie</string>
+    <!-- Accessibility content description for the "Backup Error" icon -->
+    <string name="RestoreMediaFailedBottomSheet__Backup_error_icon_content_description">Ikona błędu tworzenia kopii zapasowej</string>
+
+    <!-- Banner text that is displayed at the top of the app when trying to restore more media than the device\'s memory has space for. -->
+    <string name="RestoreMediaErrorBanner__Free_up_storage_space">Aby przywrócić multimedia, zwolnij miejsce.</string>
+    <!-- Banner text that is displayed at the top of the app when trying to restore more media than the device\'s memory has space for. The placeholder is a filesize, such as "1.23 GB." -->
+    <string name="RestoreMediaErrorBanner__Free_up_of_space">Aby przywrócić multimedia, zwolnij %1$s miejsca.</string>
+
+    <!-- Remote media restoration in-process status title. -->
+    <string name="RestoreMediaReminder__Restoring_media">Przywracanie multimediów</string>
+    <!-- Remote media restoration in-process description. The first to placeholders are filesizes, such as "865 MB" and "2.3 GB". The final placeholder is a whole number representing the percentage progress. -->
+    <string name="RestoreMediaReminder__Progress_filesize">%1$s z %2$s (%3$d)</string>
+    <!-- Remote media restoration paused status title. -->
+    <string name="RestoreMediaReminder__Restoring_media_paused">Wstrzymano przywracanie multimediów</string>
+    <!-- Remote media restoration paused status description for when the restore is paused because unmetered connectivity, such as WiFi, is unavailable. -->
+    <string name="RestoreMediaReminder__Waiting_for_Wifi">Oczekiwanie na Wi-Fi…</string>
+    <!-- Remote media restoration paused status description for when the restore is paused because internet is unavailable. -->
+    <string name="RestoreMediaReminder__Waiting_for_internet_connection">Oczekiwanie na połączenie internetowe…</string>
+    <!-- Remote media restoration paused status description for when the device\'s battery is low -->
+    <string name="RestoreMediaReminder__low_battery">Słaba bateria. Naładuj urządzenie.</string>
+    <!-- Remote media restoration call to action when the device is out of space. The placeholder string is a file size, such as "1.23 GB". -->
+    <string name="RestoreMediaReminder__Free_up_space">Aby przywrócić multimedia, zwolnij %1$s.</string>
+    <!-- Button label to abort media restoration -->
+    <string name="RestoreMediaReminder__Skip_restore">Pomiń przywracanie</string>
 
     <!-- BackupsPreferenceFragment -->
     <string name="BackupsPreferenceFragment__chat_backups">Kopia zapasowa czatów</string>
@@ -944,7 +1015,7 @@
     <!-- Bottom sheet description explaining that future messages on linked devices will be in sync with your phone but previous messages will not appear -->
     <string name="LinkDeviceFragment__signal_messages_are_synchronized">Po powiązaniu wiadomości Signal będą synchronizowane z aplikacją Signal na Twoim telefonie komórkowym. Historia poprzednich wiadomości nie będzie wyświetlana.</string>
     <!-- Bottom sheet description explaining that for non-desktop/iPad devices, they should go to %s to download Signal where %s is Signal\'s website -->
-    <string name="LinkDeviceFragment__on_other_device_visit_signal">Wejdź na %1$s na innym urządzeniu i zainstaluj Signal</string>
+    <string name="LinkDeviceFragment__on_other_device_visit_signal">Aby zainstalować Signal, odwiedź %1$s na urządzeniu, które chcesz powiązać</string>
   <!-- Removed by excludeNonTranslatables <string name="LinkDeviceFragment__signal_download_url" translatable="false">signal.org/download</string> -->
     <!-- Header title listing out current linked devices -->
     <string name="LinkDeviceFragment__my_linked_devices">Moje powiązane urządzenia</string>
@@ -962,6 +1033,12 @@
     <string name="LinkDeviceFragment__no_linked_devices">Brak powiązanych urządzeń</string>
     <!-- Title on biometrics prompt explaining what biometrics are being used for -->
     <string name="LinkDeviceFragment__unlock_to_link">Odblokuj, aby połączyć urządzenie</string>
+    <!-- Title on bottom sheet explaining our usage of biometrics to link a device -->
+    <string name="LinkDeviceFragment__before_linking">Przed powiązaniem potwierdź, że to Ty</string>
+    <!-- Body of bottom sheet explaining that users should use their device pin or biometrics and not their Signal pin -->
+    <string name="LinkDeviceFragment__tap_continue_and_enter_phone">Aby potwierdzić, wybierz Dalej i wprowadź kod blokady telefonu. Nie wpisuj swojego kodu PIN do Signal.</string>
+    <!-- Button that dismisses the bottom sheet -->
+    <string name="LinkDeviceFragment__continue">Kontynuuj</string>
 
     <!-- AddLinkDeviceFragment -->
     <!-- Description text shown on the QR code scanner when linking a device -->
@@ -989,6 +1066,7 @@
     <string name="DeviceListActivity_unlink_s">Odłączyć \"%1$s\"?</string>
     <string name="DeviceListActivity_by_unlinking_this_device_it_will_no_longer_be_able_to_send_or_receive">Wyrejestrowanie tego urządzenia spowoduje, że nie będziesz miał(a) możliwości wysyłania i odbierania wiadomości.</string>
     <string name="DeviceListActivity_network_connection_failed">Błąd połączenia sieciowego</string>
+    <!-- Button label on an alert dialog. The dialog informs the user they have network issues. If pressed, we will retry the network request. -->
     <string name="DeviceListActivity_try_again">Spróbuj ponownie</string>
     <string name="DeviceListActivity_unlinking_device">Odłączanie urządzenia…</string>
     <string name="DeviceListActivity_unlinking_device_no_ellipsis">Wyrejestrowywanie urządzenia</string>
@@ -1189,7 +1267,7 @@
     <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
     <string name="PromptLogsSlowNotificationsDialog__title_crash">Signal napotkał problem. Wysłać raport debugowania?</string>
     <!-- Title for dialog asking user to submit logs for a situation where they\'re not able to connect to the signal service -->
-    <string name="PromptLogsSlowNotificationsDialog__title_connectivity_warning">You may not be receiving messages. Submit debug log?</string>
+    <string name="PromptLogsSlowNotificationsDialog__title_connectivity_warning">Wydaje nam się, że nie otrzymujesz wiadomości. Wysłać raport debugowania?</string>
 
 
     <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
@@ -1207,9 +1285,9 @@
     <string name="DeviceSpecificNotificationBottomSheet__continue">Kontynuuj</string>
 
     <!-- Title of a bottom sheet that is shown when the user is having connectivity issues -->
-    <string name="ConnectivityWarningBottomSheet_title">You may not be receiving messages</string>
+    <string name="ConnectivityWarningBottomSheet_title">Wydaje nam się, że nie otrzymujesz wiadomości</string>
     <!-- Body of a bottom sheet that is shown when the user is having connectivity issues -->
-    <string name="ConnectivityWarningBottomSheet_body">Restarting your device may help solve the message delivery issue. If this problem continues, contact Signal support.</string>
+    <string name="ConnectivityWarningBottomSheet_body">Ponowne uruchomienie urządzenia może pomóc w rozwiązaniu problemu z dostarczaniem wiadomości. Jeśli problem nie ustąpi, skontaktuj się z pomocą techniczną Signal</string>
     <!-- Text for a button in a bottom sheet that is shown when the user is having connectivity issues. Clicking it will dismiss the bottom sheet. -->
     <string name="ConnectivityWarningBottomSheet_dismiss_button">Rozumiem</string>
 
@@ -1318,7 +1396,7 @@
     <!-- Row title for transfer option -->
     <string name="MoreTransferOrRestoreOptionsSheet__transfer_from_android_device">Przenieś z urządzenia z systemem Android</string>
     <!-- Row description for transfer option -->
-    <string name="MoreTransferOrRestoreOptionsSheet__transfer_your_account_and_messages">Transfer your account and messages from your old Android device.</string>
+    <string name="MoreTransferOrRestoreOptionsSheet__transfer_your_account_and_messages">Przenieś swoje konto i wiadomości ze starego urządzenia z systemem Android.</string>
     <!-- Row title for logging in without transfer -->
     <string name="MoreTransferOrRestoreOptionsSheet__log_in_without_transferring">Zaloguj się bez przenoszenia</string>
     <!-- Row description for logging in without transfer -->
@@ -1326,29 +1404,29 @@
     <!-- Row title for restoring from local backup -->
     <string name="MoreTransferOrRestoreOptionsSheet__restore_local_backup">Przywróć lokalną kopię zapasową</string>
     <!-- Row description for restoring from local backup -->
-    <string name="MoreTransferOrRestoreOptionsSheet__restore_your_messages">Restore your messages from a backup file you saved on your device.</string>
+    <string name="MoreTransferOrRestoreOptionsSheet__restore_your_messages">Przywróć wiadomości z kopii zapasowej zapisanej na urządzeniu.</string>
 
     <!-- RemoteRestoreActivity -->
     <!-- Progress dialog label when downloading a backup -->
-    <string name="RemoteRestoreActivity__downloading_backup">Downloading backup…</string>
+    <string name="RemoteRestoreActivity__downloading_backup">Pobieranie kopii zapasowej…</string>
     <!-- Progress dialog label when restoring a backup -->
-    <string name="RemoteRestoreActivity__restoring_messages">Restoring messages…</string>
+    <string name="RemoteRestoreActivity__restoring_messages">Trwa przywracanie wiadomości…</string>
     <!-- Progress dialog label while awaiting updates -->
-    <string name="RemoteRestoreActivity__restoring">Restoring…</string>
+    <string name="RemoteRestoreActivity__restoring">Przywracanie…</string>
     <!-- Progress readout for dialog while downloading or restoring a backup. First placeholder is the formatted size of the backup downloaded, the second is formatted total amount to go, and the last is a percentage. -->
-    <string name="RemoteRestoreActivity__s_of_s_s">%1$s of %2$s (%3$s)</string>
+    <string name="RemoteRestoreActivity__s_of_s_s">%1$s z %2$s (%3$s)</string>
     <!-- Feature list media label for paid tier -->
-    <string name="RemoteRestoreActivity__all_of_your_media">All of your media</string>
+    <string name="RemoteRestoreActivity__all_of_your_media">Wszystkie multimedia</string>
     <!-- Feature list media label for free tier. Placeholder is days, and is currently fixed at 30. -->
-    <string name="RemoteRestoreActivity__your_last_d_days_of_media">Your last %1$d days of media</string>
+    <string name="RemoteRestoreActivity__your_last_d_days_of_media">Multimedia z ostatnich %1$d dni</string>
     <!-- Feature list message label for free and paid tier -->
-    <string name="RemoteRestoreActivity__all_of_your_messages">All of your messages</string>
+    <string name="RemoteRestoreActivity__all_of_your_messages">Wszystkie wiadomości</string>
     <!-- Screen title for restoring from backup -->
     <string name="RemoteRestoreActivity__restore_from_backup">Przywróć z kopii zapasowej</string>
     <!-- Notice about what media will be included in backups. Placeholder is days, and is curerntly fixed at 30. -->
-    <string name="RemoteRestoreActivity__only_media_sent_or_received">Only media sent or received in the past %1$d days is included.</string>
+    <string name="RemoteRestoreActivity__only_media_sent_or_received">Uwzględniane są tylko multimedia wysłane lub odebrane w ciągu ostatnich %1$d dni.</string>
     <!-- Section title for explaining what your backup includes -->
-    <string name="RemoteRestoreActivity__your_backup_includes">Your backup includes:</string>
+    <string name="RemoteRestoreActivity__your_backup_includes">Kopia zapasowa obejmuje:</string>
     <!-- Primary action button copy for starting restoration -->
     <string name="RemoteRestoreActivity__restore_backup">Przywróć kopię zapasową</string>
 
@@ -1431,7 +1509,7 @@
     <string name="ShareableGroupLinkDialogFragment__group_link">Link do grupy</string>
     <string name="ShareableGroupLinkDialogFragment__share">Udostępnij</string>
     <string name="ShareableGroupLinkDialogFragment__reset_link">Zresetuj link</string>
-    <string name="ShareableGroupLinkDialogFragment__approve_new_members">Zaakceptuj nowych członków</string>
+    <string name="ShareableGroupLinkDialogFragment__require_admin_approval">Wymagaj potwierdzenia administratora</string>
     <string name="ShareableGroupLinkDialogFragment__require_an_admin_to_approve_new_members_joining_via_the_group_link">Wymagaj akceptacji nowych członków, dołączających do grupy przez link, przez administratora.</string>
     <string name="ShareableGroupLinkDialogFragment__are_you_sure_you_want_to_reset_the_group_link">Na pewno chcesz zresetować link do grupy? Ludzie nie będą mogli dołączyć do grupy, używając obecnego linku.</string>
 
@@ -1536,6 +1614,7 @@
         <item quantity="other">Wysłać %1$d zaproszeń SMS?</item>
     </plurals>
     <string name="InviteActivity_lets_switch_to_signal">Zacznij używać Signal: %1$s</string>
+    <!-- Toast shown when Signal is unable to find an external app to share the Invite text string to -->
     <string name="InviteActivity_no_app_to_share_to">Wygląda na to, że nie masz żadnych aplikacji z którymi możesz się podzielić.</string>
 
     <!-- LearnMoreTextView -->
@@ -1990,6 +2069,7 @@
     <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_wont_receive_any_messages_until_you_unblock_them">Pozwolić %1$s wysyłać do Ciebie wiadomości i udostępnić Twoje imię i zdjęcie? Nie otrzymasz żadnych wiadomości, dopóki nie odblokujesz tego kontaktu.</string>
     <!-- Shown in message request flow. Describes what will happen if you unblock an SMS user -->
     <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_wont_receive_any_messages_until_you_unblock_them_SMS">Pozwolić %1$s wysyłać Ci wiadomości? Nie otrzymasz wiadomości od tego użytkownika, dopóki go nie odblokujesz.</string>
+    <!-- Shown in message request flow. Describes what will happen if you unblock the Signal release notes channel -->
     <string name="MessageRequestBottomView_get_updates_and_news_from_s_you_wont_receive_any_updates_until_you_unblock_them">Czy chcesz otrzymywać informacje i nowości od %1$s? Nie otrzymasz żadnych informacji, dopóki nie odblokujesz tego kontaktu.</string>
     <string name="MessageRequestBottomView_continue_your_conversation_with_this_group_and_share_your_name_and_photo">Kontynuować czat z tą grupą i udostępnić Twoje imię i zdjęcie jej członkom?</string>
     <string name="MessageRequestBottomView_upgrade_this_group_to_activate_new_features">To Stara grupa, z której nie możesz już korzystać. Utwórz nową grupę, aby móc korzystać z takich nowych funkcji jak @wzmianki i administratorzy.</string>
@@ -2024,6 +2104,7 @@
         <item quantity="many">+%1$d zaproszonych</item>
         <item quantity="other">+%1$d zaproszonych</item>
     </plurals>
+    <!-- Describe the total number of groups, besides two groups, that you and a person have in common. Nested inside MessageRequestProfileView_member_of_many_groups -->
     <plurals name="MessageRequestProfileView_member_of_d_additional_groups">
         <item quantity="one">%1$d dodatkowa grupa</item>
         <item quantity="few">%1$d dodatkowe grupy</item>
@@ -2052,6 +2133,7 @@
     <string name="DeviceProvisioningActivity_content_progress_no_device">Nie znaleziono żadnych urządzeń.</string>
     <string name="DeviceProvisioningActivity_content_progress_network_error">Błąd sieci.</string>
     <string name="DeviceProvisioningActivity_content_progress_key_error">Niepoprawny kod QR.</string>
+    <!-- Toast message shown when a user has too many linked devices and needs to remove one before linking another -->
     <string name="DeviceProvisioningActivity_sorry_you_have_too_many_devices_linked_already">Masz zbyt dużo powiązanych urządzeń, spróbuj usunąć któreś z nich zanim spróbujesz ponownie</string>
     <string name="DeviceActivity_sorry_this_is_not_a_valid_device_link_qr_code">Przepraszamy, ale to nie jest prawidłowy link QR.</string>
     <string name="DeviceProvisioningActivity_link_a_signal_device">Dodać nowe urządzenie Signal?</string>
@@ -2076,11 +2158,13 @@
     <string name="PassphrasePromptActivity_ok_button_content_description">Wprowadź hasło</string>
     <string name="PassphrasePromptActivity_invalid_passphrase_exclamation">Nieprawidłowe hasło!</string>
     <string name="PassphrasePromptActivity_unlock_signal">Odblokuj Signal</string>
+    <!-- This is the subject line for the email that is sent to support -->
     <string name="PassphrasePromptActivity_signal_android_lock_screen">Signal Android - Blokada ekranu</string>
 
     <!-- PlacePickerActivity -->
     <string name="PlacePickerActivity_title">Mapa</string>
 
+    <!-- Content description of the pin image -->
     <string name="PlacePickerActivity_drop_pin">Umieść znacznik</string>
     <string name="PlacePickerActivity_accept_address">Zaakceptuj adres</string>
 
@@ -2176,6 +2260,16 @@
     <!-- Valentine\'s Day Megaphone -->
     <!-- Title text for the Valentine\'s Day donation megaphone. The placeholder will always be a heart emoji. Needs to be a placeholder for Android reasons. -->
     <!-- Body text for the Valentine\'s Day donation megaphone. -->
+
+    <!-- CallScreenTopBar -->
+    <!-- Content description for navigation icon -->
+    <string name="CallScreenTopBar__go_back">Wróć</string>
+    <!-- Content description for info icon -->
+    <string name="CallScreenTopBar__call_information">Informacje o połączeniu</string>
+
+    <!-- CallScreenPreJoinOverlay -->
+    <!-- Displayed when users camera is disabled -->
+    <string name="CallScreenPreJoinOverlay__your_camera_is_off">Twoja kamera jest wyłączona</string>
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">Dotknij tutaj, aby włączyć wideo</string>
@@ -2326,6 +2420,7 @@
 
     <string name="WebRtcCallView__no_one_else_is_here">Brak innych uczestników rozmowy</string>
     <string name="WebRtcCallView__s_is_in_this_call">%1$s uczestniczy w rozmowie</string>
+    <!-- Description of who is in the call when it is only you, %1$s is replaced with either CallParticipant__you or CallParticipant__you_on_another_device -->
     <string name="WebRtcCallView__s_are_in_this_call">%1$s uczestniczysz w rozmowie</string>
     <string name="WebRtcCallView__s_and_s_are_in_this_call">%1$s i %2$s uczestniczą w rozmowie</string>
 
@@ -2348,6 +2443,8 @@
     <string name="WebRtcCallView__additional_actions">Dodatkowe działania</string>
     <!-- Content description for end-call button -->
     <string name="WebRtcCallView__end_call">Zakończ rozmowę</string>
+    <!-- Content description for toggling group ring state -->
+    <string name="WebRtcCallView__toggle_group_ringing">Przełączanie dzwonka grupowego</string>
 
     <!-- Error message when the developer added a button in the wrong place. -->
     <string name="WebRtcAudioOutputToggleButton_fragment_activity_error">Wystąpił błąd interfejsu. Prosimy o zgłoszenie tego błędu twórcom.</string>
@@ -2615,6 +2712,7 @@
     <string name="SharedContactView_message">Wiadomość Signal</string>
 
     <!-- SignalBottomActionBar -->
+    <!-- Text to describe a button that will show more options -->
     <string name="SignalBottomActionBar_more">Więcej</string>
 
     <!-- SignalPinReminders -->
@@ -2646,6 +2744,7 @@
     <string name="StickerManagementAdapter_no_stickers_installed">Brak zainstalowanych naklejek</string>
     <string name="StickerManagementAdapter_stickers_from_incoming_messages_will_appear_here">Tutaj pojawią się naklejki z wiadomości przychodzących</string>
     <string name="StickerManagementAdapter_untitled">Bez tytułu</string>
+    <!-- Message shown when the author of the sticker pack is unknown -->
     <string name="StickerManagementAdapter_unknown">Nieznany</string>
 
     <!-- StickerPackPreviewActivity -->
@@ -2748,6 +2847,7 @@
     <string name="ApkUpdateNotifications_failed_general_body">Spróbujemy ponownie później.</string>
     <string name="ApkUpdateNotifications_auto_update_success_title">Signal został pomyślnie zaktualizowany</string>
     <string name="ApkUpdateNotifications_auto_update_success_body">Aplikacja została automatycznie zaktualizowana do wersji %1$s.</string>
+    <string name="ApkUpdateNotifications_manual_update_success_body">Zaktualizowano Signal do wersji %1$s.</string>
 
     <!-- UntrustedSendDialog -->
     <string name="UntrustedSendDialog_send_message">Wysłać wiadomość?</string>
@@ -2868,6 +2968,7 @@
     <string name="MediaPreviewActivity_media_no_longer_available">Multimedia nie są już dostępne.</string>
     <!-- Notifying the user that the device has encountered a technical issue and is unable to render a video. -->
     <string name="MediaPreviewActivity_unable_to_play_media">Nie można odtworzyć multimediów.</string>
+    <!-- Toast shown when there is an error finding a media-based message -->
     <string name="MediaPreviewActivity_error_finding_message">Błąd przy szukaniu wiadomości</string>
     <string name="MediaPreviewActivity_cant_find_an_app_able_to_share_this_media">Nie można znaleźć aplikacji, aby udostępnić te multimedia.</string>
     <string name="MediaPreviewActivity_dismiss_due_to_error">Zamknij</string>
@@ -2943,6 +3044,7 @@
     <!-- Notification Channels -->
     <string name="NotificationChannel_channel_messages">Wiadomości</string>
     <string name="NotificationChannel_calls">Połączenia</string>
+    <!-- Notification channel name for notifications involving failures of some sort (eg donations, message sends, etc.) -->
     <string name="NotificationChannel_failures">Awarie</string>
     <string name="NotificationChannel_backups">Kopie zapasowe</string>
     <string name="NotificationChannel_locked_status">Status blokady</string>
@@ -2952,6 +3054,7 @@
     <string name="NotificationChannel_missing_display_name">Nieznany</string>
     <string name="NotificationChannel_voice_notes">Wiadomości głosowe</string>
     <string name="NotificationChannel_contact_joined_signal">Kontakt dołączył do Signal</string>
+    <!-- Toast shown when there is no application available to open the settings -->
     <string name="NotificationChannels__no_activity_available_to_open_notification_channel_settings">Brak dostępnej aktywności, aby otworzyć ustawienia kanału powiadomień.</string>
     <!-- Notification channel name for showing persistent background connection on devices without push notifications -->
     <string name="NotificationChannel_background_connection">Połączenie w tle</string>
@@ -3181,6 +3284,7 @@
     <string name="conversation_activity__attachment_thumbnail">Minaturka załącznika</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Bezpośrednie przechwytywanie</string>
     <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">Nagraj i wyślij załącznik dźwiękowy</string>
+    <!-- Accessibility content description describing how a user can lock voice note recording. -->
     <string name="conversation_activity__quick_attachment_drawer_lock_record_description">Zablokuj nagrywanie załącznika audio</string>
     <string name="conversation_activity__message_could_not_be_sent">Nie udało się wysłać wiadomości. Sprawdź połączenie z internetem i spróbuj ponownie.</string>
 
@@ -3199,6 +3303,7 @@
     <string name="conversation_item_sent__message_read">Wiadomość odczytana</string>
 
     <!-- conversation_item_received -->
+    <!-- Content description for profile pictures -->
     <string name="conversation_item_received__contact_photo_description">Zdjęcie kontaktu</string>
 
     <!-- ConversationUpdateItem -->
@@ -3283,6 +3388,7 @@
     <string name="EnableCallNotificationSettingsDialog__everything_looks_good_now">Teraz wszystko wygląda dobrze!</string>
     <string name="EnableCallNotificationSettingsDialog__to_receive_call_notifications_tap_here_and_turn_on_show_notifications">Aby otrzymywać powiadomienia o połączeniach, stuknij tutaj i włącz \"Pokazuj powiadomienia\".</string>
     <string name="EnableCallNotificationSettingsDialog__to_receive_call_notifications_tap_here_and_turn_on_notifications">Aby otrzymywać powiadomienia o połączeniach, stuknij tutaj, włącz powiadomienia i upewnij się, że dźwięk i komunikaty są włączone.</string>
+    <!-- Message shown when Signal determines potential issues with getting call notifications and how to fix it -->
     <string name="EnableCallNotificationSettingsDialog__to_receive_call_notifications_tap_here_and_enable_background_activity_in_battery_settings">Aby otrzymywać powiadomienia o połączeniach, stuknij tutaj i włącz aktywność w tle w sekcji ustawień \"Bateria\". </string>
     <string name="EnableCallNotificationSettingsDialog__settings">Ustawienia</string>
     <string name="EnableCallNotificationSettingsDialog__to_receive_call_notifications_tap_settings_and_turn_on_show_notifications">Aby otrzymywać powiadomienia o połączeniach, stuknij Ustawienia i włącz \"Pokazuj powiadomienia\".</string>
@@ -3531,6 +3637,7 @@
   <!-- Removed by excludeNonTranslatables <string name="HelpFragment__emoji_1" translatable="false">emoji_1</string> -->
   <!-- Removed by excludeNonTranslatables <string name="HelpFragment__link__debug_info" translatable="false">https://support.signal.org/hc/articles/360007318591</string> -->
   <!-- Removed by excludeNonTranslatables <string name="HelpFragment__link__faq" translatable="false">https://support.signal.org</string> -->
+    <!-- Heading used within support email that lists additional information to help with debugging -->
     <string name="HelpFragment__support_info">Informacje dodatkowe</string>
     <string name="HelpFragment__signal_android_support_request">Zgłoszenie pomocy technicznej Signal Android</string>
   <!-- Removed by excludeNonTranslatables <string name="HelpFragment__debug_log" translatable="false">Debug Log:</string> -->
@@ -3621,6 +3728,7 @@
     <string name="preferences__retrieve_link_previews_from_websites_for_messages">Pobieraj podglądy linków we wiadomościach bezpośrednio ze stron internetowych.</string>
     <string name="preferences__change_passphrase">Zmień hasło</string>
     <string name="preferences__change_your_passphrase">Zmień swoje hasło</string>
+    <!-- Legacy preference menu item to enable a passphrase screen lock that is only available to those who have previously had a passphrase -->
     <string name="preferences__enable_passphrase">Włącz blokowanie ekranu hasłem</string>
     <string name="preferences__lock_signal_and_message_notifications_with_a_passphrase">Zablokuj ekran i powiadomienia hasłem</string>
     <string name="preferences__screen_security">Ochrona ekranu</string>
@@ -3633,6 +3741,7 @@
     <string name="preferences__pref_led_blink_title">Wzór powiadomień LED</string>
     <string name="preferences__customize">Dostosuj</string>
     <string name="preferences__change_sound_and_vibration">Zmień dźwięk i wibracje</string>
+    <!-- Preference menu item to control the sound of notifications -->
     <string name="preferences__sound">Dźwięk</string>
     <string name="preferences__silent">Wycisz</string>
     <string name="preferences__default">Domyślny</string>
@@ -3756,10 +3865,12 @@
     <!-- Secondary warning dialog message about deleting all chat message history from everything everywhere including linked devices -->
     <string name="preferences_storage__all_message_history_will_be_permanently_removed_this_action_cannot_be_undone_linked_device">Cała historia wiadomości zostanie trwale usunięta ze wszystkich urządzeń. Tego działania nie można cofnąć.</string>
     <string name="preferences_storage__delete_all_now">Usuń wszystko teraz</string>
+    <!-- Option for keeping messages forever when managing storage -->
     <string name="preferences_storage__forever">Zawsze</string>
     <string name="preferences_storage__one_year">1 rok</string>
     <string name="preferences_storage__six_months">6 miesięcy</string>
     <string name="preferences_storage__thirty_days">30 dni</string>
+    <!-- Option for setting no limit of the length of chat messages -->
     <string name="preferences_storage__none">Brak</string>
     <plurals name="preferences_storage__s_messages_plural">
         <item quantity="one">%1$s wiadomość</item>
@@ -3786,6 +3897,7 @@
     <string name="preferences_notifications__show">Pokaż</string>
     <string name="preferences_notifications__ringtone">Dzwonek</string>
     <string name="preferences_chats__message_text_size">Rozmiar czcionki dla wiadomości</string>
+    <!-- Option in settings that will provide a shortcut to notification system settings to control the priority of Signal notifications -->
     <string name="preferences_notifications__priority">Priorytet</string>
     <!-- Option in settings to trouble shoot delayed notifications -->
     <string name="preferences_notifications__troubleshoot">Rozwiązywanie problemów z powiadomieniami</string>
@@ -3934,6 +4046,10 @@
     <string name="PermissionDeniedBottomSheet__1_tap_settings_below">1. Wybierz „Ustawienia” poniżej</string>
     <!-- Sheet describing step 2 on how to give permissions by checking the permissions button in settings where %s will be replaced with an image of a checked button -->
     <string name="PermissionDeniedBottomSheet__2_allow_permission">2. %1$s Zezwól na dostęp</string>
+    <!-- Sheet describing step 2 on how to give permissions by tapping permissions in their settings -->
+    <string name="PermissionDeniedBottomSheet__2_tap_permissions">2. Stuknij „Uprawnienia”</string>
+    <!-- Sheet describing step 3 on how to give permissions for photos and videos in settings where %s will be replaced with an image of a checked button -->
+    <string name="PermissionDeniedBottomSheet__3_allow_permission">3. %1$s Zezwól na dostęp do zdjęć i filmów</string>
     <!-- Label for button at the bottom of the sheet which opens the system permission settings -->
     <string name="PermissionDeniedBottomSheet__settings">Ustawienia</string>
 
@@ -4010,6 +4126,7 @@
     <string name="PaymentsTransferQrScanFragment__scan_the_address_qr_code_of_the_payee">Zeskanuj kod QR odbiorcy płatności</string>
 
     <!-- CreatePaymentFragment -->
+    <!-- Button text to request the payment from a user -->
     <string name="CreatePaymentFragment__request">Prośba</string>
     <string name="CreatePaymentFragment__pay">Zapłać</string>
     <string name="CreatePaymentFragment__available_balance_s">Dostępne środki: %1$s</string>
@@ -4143,6 +4260,7 @@
     <string name="conversation_list__you_can_only_pin_up_to_d_chats">Możesz przypiąć maksymalnie %1$d czaty(ów)</string>
 
     <!-- conversation_list_item_view -->
+    <!-- Content description for contact avatar photo -->
     <string name="conversation_list_item_view__contact_photo_image">Zdjęcie kontaktu</string>
     <string name="conversation_list_item_view__archived">Archiwum</string>
 
@@ -4151,6 +4269,10 @@
     <string name="conversation_list_fragment__fab_content_description">Nowy czat</string>
     <string name="conversation_list_fragment__open_camera_description">Otwórz aparat</string>
     <string name="conversation_list_fragment__no_chats_yet_get_started_by_messaging_a_friend">Nie masz jeszcze żadnych czatów.\nZacznij od wysłania wiadomości do znajomego.</string>
+    <!-- Message shown when there are no chats in the chat folder to display -->
+    <string name="conversation_list_fragment__no_chats_to_display">Brak czatów do wyświetlenia</string>
+    <!-- Button text that will open up chat folder settings -->
+    <string name="conversation_list_fragment__folder_settings">Ustawienia folderu</string>
 
 
     <!-- conversation_secure_verified -->
@@ -4399,6 +4521,7 @@
     <string name="preferences_chats__chat_backups">Kopia zapasowa czatów</string>
     <string name="preferences_chats__transfer_account">Przenieś konto</string>
     <string name="preferences_chats__transfer_account_to_a_new_android_device">Przenieś konto na nowe urządzenie z systemem Android</string>
+    <!-- Title for dialog to enter in the backup passphrase -->
     <string name="RegistrationActivity_enter_backup_passphrase">Wprowadź hasło kopii zapasowej</string>
     <string name="RegistrationActivity_restore">Przywróć</string>
     <string name="RegistrationActivity_backup_failure_downgrade">Import kopii zapasowej z nowszej wersji nie udał się</string>
@@ -4478,6 +4601,8 @@
     <string name="preferences_app_protection__screen_lock">Blokada ekranu</string>
     <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Zablokuj dostęp do aplikacji Signal za pomocą blokady ekranu Android lub za pomocą odcisku palca</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Blokada ekranu po czasie nieaktywności</string>
+    <!-- Snackbar text shown when trying to enable screen lock but the user does not have a password or biometrics enabled -->
+    <string name="preferences_app_protection__to_use_screen_lock">Aby korzystać z blokady ekranu, ustaw kod PIN, wzór lub hasło na tym urządzeniu.</string>
     <string name="preferences_app_protection__signal_pin">PIN Signal</string>
     <string name="preferences_app_protection__create_a_pin">Utwórz PIN</string>
     <string name="preferences_app_protection__change_your_pin">Zmień swój PIN</string>
@@ -4498,8 +4623,41 @@
     <string name="RegistrationActivity_you_have_made_too_many_attempts_please_try_again_later">Zbyt dużo nieudanych prób. Spróbuj ponownie później.</string>
     <string name="RegistrationActivity_error_connecting_to_service">Błąd podczas łączenia się z usługą</string>
     <string name="preferences_chats__backups">Kopie zapasowe</string>
-    <string name="prompt_passphrase_activity__signal_is_locked">Signal jest zablokowany</string>
-    <string name="prompt_passphrase_activity__tap_to_unlock">DOTKNIJ, ABY ODBLOKOWAĆ</string>
+    <!-- Title text shown when Signal is locked and needs to be unlocked -->
+    <string name="prompt_passphrase_activity__unlock_signal">Odblokuj Signal</string>
+    <!-- Description text explaining how to unlock Signal -->
+    <string name="prompt_passphrase_activity__use_your_android_device">Aby odblokować Signal, użyj tej samej metody, którą odblokowujesz swoje urządzenie z Androidem.</string>
+    <!-- Text shown in a dialog that further explains how to unlock Signal by using the same unlocking methods that are used to unlock their own device -->
+    <string name="prompt_passphrase_activity__screen_lock_is_on">Masz włączoną blokadę ekranu, a dostęp do Signal jest chroniony ustawieniami blokady w Twoim urządzeniu. Odblokuj Signal tą samą metodą, którą zwykle odblokowujesz telefon: twarzą, odciskiem palca, kodem PIN, hasłem lub wzorem.</string>
+    <!-- Button in a dialog that will contact Signal support if pressed -->
+    <string name="prompt_passphrase_activity__contact_support">Kontakt z działem technicznym</string>
+    <!-- Button text to try again after unlocking has previously failed -->
+    <string name="prompt_passphrase_activity__try_again">Spróbuj ponownie</string>
+
+    <!-- ScreenLockSettingsFragment -->
+    <!-- Text shown when screen lock is not enabled -->
+    <string name="ScreenLockSettingsFragment__off">Wyłączone</string>
+    <!-- Text shown with toggle that when switched on will enable screen lock -->
+    <string name="ScreenLockSettingsFragment__use_screen_lock">Użyj blokady ekranu</string>
+    <!-- Description of what screen locking will do and how notification content will not be shown when screen is locked -->
+    <string name="ScreenLockSettingsFragment__your_android_device">Jeśli wyjdziesz z Signal lub przełączysz Signal na inną aplikację, do odblokowania Signal użyj tej samej metody, którą zwykle odblokowujesz swój telefon z Androidem. W trybie blokady powiadomienia nie będą zawierały podglądu wiadomości.</string>
+    <!-- Title text explaining when users should start the screen lock -->
+    <string name="ScreenLockSettingsFragment__start_screen_lock">Uruchom blokadę ekranu</string>
+    <!-- Option text explaining that screen lock should start immediately -->
+    <string name="ScreenLockSettingsFragment__immediately">Natychmiast</string>
+    <!-- Option text explaining that screen lock should start after 1 minute of inactivity -->
+    <string name="ScreenLockSettingsFragment__after_1_min">Po 1 minucie</string>
+    <!-- Option text explaining that screen lock should start after 5 minutes of inactivity -->
+    <string name="ScreenLockSettingsFragment__after_5_min">Po 5 minutach</string>
+    <!-- Option text explaining that screen lock should start after 30 minutes of inactivity -->
+    <string name="ScreenLockSettingsFragment__after_30_min">Po 30 minutach</string>
+    <!-- Option text explaining that screen lock should start at a custom time set by the user -->
+    <string name="ScreenLockSettingsFragment__custom_time">Ustaw inny czas</string>
+    <!-- Title on biometrics prompt explaining that biometrics are needed to turn on screen lock -->
+    <string name="ScreenLockSettingsFragment__use_signal_screen_lock">Użyć blokady ekranu Signal?</string>
+    <!-- Title on biometrics prompt explaining that biometrics are needed to turn off screen lock -->
+    <string name="ScreenLockSettingsFragment__turn_off_signal_lock">Wyłączyć blokadę ekranu Signal?</string>
+
     <string name="Recipient_unknown">Nieznany</string>
     <!-- Name to use for a user across the UI when they are unregistered and have no other name available -->
     <string name="Recipient_deleted_account">Konto usunięte</string>
@@ -4571,6 +4729,7 @@
 
     <!-- DeviceTransferSetupFragment -->
     <string name="DeviceTransferSetup__unable_to_open_wifi_settings">Nie można otworzyć ustawień Wi-Fi. Włącz Wi-Fi ręcznie.</string>
+    <!-- Message on button that will prompt for location permissions in order to complete a device transfer -->
     <string name="DeviceTransferSetup__grant_location_permission">Udziel dostępu do lokalizacji</string>
     <string name="DeviceTransferSetup__turn_on_location_services">Włącz usługi lokalizacji</string>
     <string name="DeviceTransferSetup__turn_on_wifi">Włącz Wi-Fi</string>
@@ -4838,6 +4997,7 @@
 
     <!-- ShareActivity -->
     <string name="ShareActivity__share">Udostępnij</string>
+    <!-- Label to describe circular spinner button -->
     <string name="ShareActivity__send">Wyślij</string>
     <string name="ShareActivity__comma_s">, %1$s</string>
     <!-- Toast when the incoming intent is invalid -->
@@ -5028,11 +5188,11 @@
     <!-- AppSettingsFragment -->
     <string name="AppSettingsFragment__invite_your_friends">Zaproś znajomych</string>
     <!-- String displayed in a toast when we successfully copy the donations subscriber id to the clipboard -->
-    <string name="AppSettingsFragment__copied_donor_subscriber_id_to_clipboard">Copied donor subscriber id to clipboard</string>
+    <string name="AppSettingsFragment__copied_donor_subscriber_id_to_clipboard">Skopiowano identyfikator subskrybenta-darczyńcy do schowka</string>
     <!-- String displayed in a toast when we successfully copy the backups subscriber id to the clipboard -->
-    <string name="AppSettingsFragment__copied_backups_subscriber_id_to_clipboard">Copied backups subscriber id to clipboard</string>
+    <string name="AppSettingsFragment__copied_backups_subscriber_id_to_clipboard">Skopiowano identyfikator subskrybenta-właściciela kopii zapasowej do schowka</string>
     <!-- String displayed in a toast when a subscriber id is not present for a given type -->
-    <string name="AppSettingsFragment__no_subscriber_id_set">No subscriber id set</string>
+    <string name="AppSettingsFragment__no_subscriber_id_set">Nie ustawiono identyfikatora subskrybenta</string>
 
     <!-- AccountSettingsFragment -->
     <string name="AccountSettingsFragment__account">Konto</string>
@@ -5142,7 +5302,139 @@
 
     <!-- ChatsSettingsFragment -->
     <string name="ChatsSettingsFragment__keyboard">Klawiatura</string>
-    <string name="ChatsSettingsFragment__enter_key_sends">Enter wysyła wiadomość</string>
+    <string name="ChatsSettingsFragment__send_with_enter">Wysyłaj za pomocą Enter</string>
+    <!-- Heading within chats settings for chat folders -->
+    <string name="ChatsSettingsFragment__chat_folders">Foldery z czatami</string>
+    <!-- Option within settings to add a new chat folder if you have never created a folder before -->
+    <string name="ChatsSettingsFragment__add_chat_folder">Dodaj folder z czatami</string>
+    <!-- Option within settings to add or edit chat folders that is shown when you have already created folders -->
+    <string name="ChatsSettingsFragment__add_edit_chat_folder">Dodaj lub edytuj foldery</string>
+    <!-- Text describing the number of folders you have -->
+    <plurals name="ChatsSettingsFragment__d_folder">
+        <item quantity="one">%1$d folder</item>
+        <item quantity="few">%1$d foldery</item>
+        <item quantity="many">%1$d folderów</item>
+        <item quantity="other">%1$d folderów</item>
+    </plurals>
+
+    <!-- ChatFoldersEducationSheet -->
+    <!-- Text in a bottom sheet describing chat folders and what they can be created for -->
+    <string name="ChatFoldersEducationSheet__create_folders_for_family">Utwórz osobne foldery dla rodziny, znajomych, współpracowników itp.</string>
+    <!-- Text in a bottom sheet explaining how chat folders can be configured to only show unread chats  -->
+    <string name="ChatFoldersEducationSheet__choose_to_show_unread">Pokazuj tylko nieodczytane czaty </string>
+    <!-- Text in a bottom sheet stating that suggested folders can be easily created -->
+    <string name="ChatFoldersEducationSheet__easily_add_suggested">Z łatwością dodawaj sugerowane foldery</string>
+    <!-- Button text to dismiss bottom sheet -->
+    <string name="ChatFoldersEducationSheet__continue">Kontynuuj</string>
+
+    <!-- ChatFoldersFragment -->
+    <!-- Description of what chat folders are -->
+    <string name="ChatFoldersFragment__organize_your_chats">Uporządkuj swoje czaty w folderach i przełączaj się między nimi wygodnie na swojej liście czatów.</string>
+    <!-- Header for section showing current chat folders -->
+    <string name="ChatFoldersFragment__folders">Foldery</string>
+    <!-- Text next to button that allows users to create a new chat folder -->
+    <string name="ChatFoldersFragment__create_a_folder">Utwórz folder</string>
+    <!-- Name of a chat folder that represents the folder containing all chats -->
+    <string name="ChatFoldersFragment__all_chats">Wszystkie czaty</string>
+    <!-- Header for section showing suggested chat folders for users to have -->
+    <string name="ChatFoldersFragment__suggested_folders">Sugerowane foldery</string>
+    <!-- Name of a chat folder that contains all chats that currently have unread messages -->
+    <string name="ChatFoldersFragment__unread">Nieodczytane</string>
+    <!-- Description of the suggested unread chat folder -->
+    <string name="ChatFoldersFragment__unread_messages">Nieodczytane wiadomości ze wszystkich czatów</string>
+    <!-- Name of a chat folder that contains all 1:1 (individual) chats -->
+    <string name="ChatFoldersFragment__one_on_one_chats">Czaty 1:1</string>
+    <!-- Description of the suggested 1:1 chat folder -->
+    <string name="ChatFoldersFragment__only_direct_messages">Tylko wiadomości z czatów bezpośrednich</string>
+    <!-- Name of a chat folder that contains all groups chats -->
+    <string name="ChatFoldersFragment__groups">Grupy</string>
+    <!-- Description of the suggested group chat folder -->
+    <string name="ChatFoldersFragment__only_group_messages">Tylko wiadomości z czatów grupowych</string>
+    <!-- Button text to add a suggested folder to a user\'s chat folders -->
+    <string name="ChatFoldersFragment__add">Dodaj</string>
+    <!-- Toast shown when a folder gets added where %s is the name of the folder -->
+    <string name="ChatFoldersFragment__folder_added">Dodano folder %1$s.</string>
+    <!-- Option in context menu to edit the folder -->
+    <string name="ChatFoldersFragment__edit_folder">Edytuj folder</string>
+    <!-- Option in context menu to mute all chats in the folder -->
+    <string name="ChatFoldersFragment__mute_all">Wycisz wszystkie</string>
+    <!-- Option in context menu to unmute all chats in the folder -->
+    <string name="ChatFoldersFragment__unmute_all">Wyłącz wyciszenie dla wszystkich</string>
+    <!-- Option in context menu to mark all of the chats in a folder as read -->
+    <string name="ChatFoldersFragment__mark_all_read">Oznacz wszystkie jako przeczytane</string>
+    <!-- Text describing the number of chat types in a folder -->
+    <plurals name="ChatFoldersFragment__d_chat_types">
+        <item quantity="one">%1$d rodzaj czatu</item>
+        <item quantity="few">%1$d rodzaje czatu</item>
+        <item quantity="many">%1$d rodzajów czatu</item>
+        <item quantity="other">%1$d rodzajów czatu</item>
+    </plurals>
+    <!-- Text describing the number of chat in a folder -->
+    <plurals name="ChatFoldersFragment__d_chats">
+        <item quantity="one">%1$d czat</item>
+        <item quantity="few">%1$d czaty</item>
+        <item quantity="many">%1$d czatów</item>
+        <item quantity="other">%1$d czatu</item>
+    </plurals>
+    <!-- Text describing the number of chats that are excluded in a folder -->
+    <plurals name="ChatFoldersFragment__d_chats_excluded">
+        <item quantity="one">%1$d wykluczony czat</item>
+        <item quantity="few">%1$d wykluczone czaty</item>
+        <item quantity="many">%1$d wykluczonych czatów</item>
+        <item quantity="other">%1$d wykluczonych czatów</item>
+    </plurals>
+    <!-- Badge shown in chat folder tab when unread count is greater than 99 -->
+    <string name="ChatFolderAdapter__99p">99+</string>
+
+    <!-- CreateFoldersFragment -->
+    <!-- Title of the screen when creating a folder, displayed in the toolbar -->
+    <string name="CreateFoldersFragment__create_a_folder">Utwórz folder</string>
+    <!-- Hint text shown in text field to enter a name for the folder -->
+    <string name="CreateFoldersFragment__folder_name">Nazwa folderu (wymagana)</string>
+    <!-- Section title representing what chats are included in the folder -->
+    <string name="CreateFoldersFragment__included_chats">Dodane czaty</string>
+    <!-- Text next to button that allows users to add chats to the folder    -->
+    <string name="CreateFoldersFragment__add_chats">Dodaj czaty</string>
+    <!-- Description explaining the purpose of the included chats section -->
+    <string name="CreateFoldersFragment__choose_chats_you_want">Wybierz czaty, które mają się pojawić w tym folderze.</string>
+    <!-- Section title representing what chats are excluded from the folder -->
+    <string name="CreateFoldersFragment__exceptions">Wyjątki</string>
+    <!-- Text next to button that allows users to exclude chats from the folder   -->
+    <string name="CreateFoldersFragment__exclude_chats">Wyklucz czaty</string>
+    <!-- Description explaining the purpose of the excluded chats section -->
+    <string name="CreateFoldersFragment__choose_chats_you_do_not_want">Wybierz czaty, które nie mają być uwzględnione w tym folderze.</string>
+    <!-- Toggle switch for folder to show unread chats -->
+    <string name="CreateFoldersFragment__only_show_unread_chats">Pokaż tylko nieodczytane czaty</string>
+    <!-- Explanation of unread toggle option -->
+    <string name="CreateFoldersFragment__when_enabled_only_chats">Po włączeniu tej opcji w tym folderze będą wyświetlane tylko czaty z nieodczytanymi wiadomościami.</string>
+    <!-- Toggle switch to display muted chats in chat folders -->
+    <string name="CreateFoldersFragment__include_muted_chats">Uwzględnij wyciszone czaty</string>
+    <!-- Button text to create a folder -->
+    <string name="CreateFoldersFragment__create">Utwórz</string>
+    <!-- Section title shown when editing an existing folder   -->
+    <string name="CreateFoldersFragment__edit_folder">Edytuj folder</string>
+    <!-- Button text to save the changes to a folder after it has been edited -->
+    <string name="CreateFoldersFragment__save">Zapisz</string>
+    <!-- Alert dialog title shown when users are going to discard any changes made to a folder without saving -->
+    <string name="CreateFoldersFragment__discard_changes_title">Discard changes?</string>
+    <!-- Alert dialog description explaining that any changes made will be discarded -->
+    <string name="CreateFoldersFragment__you_will_lose_changes">You\'ll lose the changes you\'ve made to this folder.</string>
+    <!-- Alert dialog confirmation text to discard the changes -->
+    <string name="CreateFoldersFragment__discard">Odrzuć</string>
+    <!-- Text that when pressed will delete the current folder -->
+    <string name="CreateFoldersFragment__delete_folder">Usuń folder</string>
+    <!-- Alert dialog title to delete the current folder -->
+    <string name="CreateFoldersFragment__delete_this_chat_folder">Usunąć ten folder z czatami?</string>
+    <!-- Option to see all of the chats if the chat list was too long and had been truncated -->
+    <string name="CreateFoldersFragment__see_all">Zobacz wszystkie</string>
+    <!-- Toast shown when trying to make a folder with no name -->
+    <string name="CreateFoldersFragment__please_enter_name">Please enter a folder name</string>
+
+    <!-- ChooseChatsFragment -->
+    <!-- Section title representing chat types that can be added to the folder  -->
+    <string name="ChooseChatsFragment__chat_types">Rodzaje czatu</string>
+    <!-- Done button label to save selected chats to folder -->
+    <string name="ChooseChatsFragment__done">Gotowe</string>
 
     <!-- NotificationsSettingsFragment -->
     <string name="NotificationsSettingsFragment__messages">Wiadomości</string>
@@ -5166,10 +5458,10 @@
     <string name="PrivacySettingsFragment__blocked">Zablokowano</string>
     <!-- Settings label that shows the number blocked contacts -->
     <plurals name="PrivacySettingsFragment__d_contacts">
-        <item quantity="one">%1$d kontakt</item>
-        <item quantity="few">%1$d kontakty</item>
-        <item quantity="many">%1$d kontaktów</item>
-        <item quantity="other">%1$d kontaktu</item>
+        <item quantity="one">%1$d kontakt lub grupa</item>
+        <item quantity="few">%1$d kontakty lub grupy</item>
+        <item quantity="many">%1$d kontaktów lub grup</item>
+        <item quantity="other">%1$d kontaktu lub grupy</item>
     </plurals>
     <string name="PrivacySettingsFragment__messaging">Wiadomości</string>
     <string name="PrivacySettingsFragment__disappearing_messages">Znikające wiadomości</string>
@@ -5182,7 +5474,7 @@
     <!-- Summary for stories preference to launch into story privacy settings -->
     <string name="PrivacySettingsFragment__payment_lock_require_lock">Wymagaj blokady ekranu Androida lub odcisku palca do przelania środków.</string>
     <!-- Alert dialog title when payment lock cannot be enabled -->
-    <string name="PrivacySettingsFragment__cant_enable_title">Can’t enable payment lock</string>
+    <string name="PrivacySettingsFragment__cant_enable_title">Nie można włączyć zabezpieczenia płatności</string>
     <!-- Alert dialog description to setup screen lock or fingerprint in phone settings -->
     <string name="PrivacySettingsFragment__cant_enable_description">Aby włączyć zabezpieczenie płatności, musisz wejść w ustawienia i włączyć funkcję blokady ekranu lub identyfikacji za pomocą odcisku palca</string>
     <!-- Shown in a toast when we can\'t navigate to the user\'s system fingerprint settings -->
@@ -5229,6 +5521,7 @@
 
     <!-- DataAndStorageSettingsFragment -->
     <string name="DataAndStorageSettingsFragment__media_quality">Jakość multimediów</string>
+    <!-- Category title for the quality of the media to be sent -->
     <string name="DataAndStorageSettingsFragment__sent_media_quality">Jakość wysyłanych multimediów</string>
     <string name="DataAndStorageSettingsFragment__sending_high_quality_media_will_use_more_data">Wysyłanie multimediów wysokiej jakości zużywa więcej danych.</string>
     <!-- Setting option that can be selected to default media to be sent as high quality by default -->
@@ -5378,7 +5671,7 @@
     <string name="PermissionsSettingsFragment__only_admins">Tylko administratorzy</string>
     <string name="PermissionsSettingsFragment__who_can_add_new_members">Kto może dodawać nowych członków?</string>
     <string name="PermissionsSettingsFragment__who_can_edit_this_groups_info">Kto może edytować informacje o tej grupie?</string>
-    <string name="PermissionsSettingsFragment__who_can_send_messages">Kto może wysyłać wiadomości?</string>
+    <string name="PermissionsSettingsFragment__who_can_send_messages">Kto może wysyłać wiadomości i wykonywać połączenia?</string>
 
     <!-- SoundsAndNotificationsSettingsFragment -->
     <string name="SoundsAndNotificationsSettingsFragment__mute_notifications">Wycisz powiadomienia</string>
@@ -5521,6 +5814,7 @@
     <!-- Positive dialog action when sending a story via an add to group story button -->
     <string name="MediaReviewFragment__add_to_story">Dodaj do relacji</string>
     <string name="MediaReviewFragment__add_a_message">Dodaj wiadomość</string>
+    <!-- Hint text inside of a compose box that is shown when the user is adding media while quoting a message. -->
     <string name="MediaReviewFragment__add_a_reply">Dodaj odpowiedź</string>
     <string name="MediaReviewFragment__send_to">Wyślij do</string>
     <string name="MediaReviewFragment__view_once_message">Multimedia jednorazowe</string>
@@ -5745,13 +6039,17 @@
     <string name="InAppPaymentInProgressFragment__processing_donation">Przetwarzanie darowizny…</string>
     <string name="InAppPaymentInProgressFragment__processing_payment">Przetwarzanie płatności…</string>
 
+    <!--InAppDonations -->
+    <!-- Label displayed in google play and on receipts for recurring subscriptions. Placeholder is level -->
+    <string name="InAppDonations__recurring_d">Cyklicznie %1$d</string>
+
     <!-- InAppPaymentErrors -->
     <!-- Displayed as a title in a dialog or notification when a payment failure happens. -->
     <string name="InAppPaymentErrors__error_processing_payment">Błąd przetwarzania płatności</string>
     <!-- Displayed as a message in a dialog or notification when a payment setup error happens. -->
     <string name="InAppPaymentErrors__your_payment_couldnt_be_processed">Twoja płatność nie mogła zostać przetworzona i Twoje konto nie zostało obciążone. Spróbuj ponownie.</string>
     <!-- Displayed as a message in a dialog when we timeout waiting for a payment to be processed and token to be redeemed -->
-    <string name="InAppPaymentErrors__your_payment_is_still">Twoja płatność wciąż jest przetwarzana. W zależności od Twojego połączenia z siecią, to może potrwać kilka minut.</string>
+    <string name="InAppPaymentErrors__your_payment_is_still">Twoja płatność wciąż jest przetwarzana. W zależności od Twojego połączenia z siecią może to potrwać kilka minut.</string>
     <!-- Displayed as a message in a dialog or notification when stripe decline code issuer not available for backup payment. -->
     <string name="InAppPaymentErrors__StripeDeclineCode__try_completing_the_payment_again">Spróbuj ponownie dokonać płatności lub skontaktuj się ze swoim bankiem, aby otrzymać więcej informacji.</string>
     <!-- Failure code text for revoked authorization of payment, displayed in a dialog or notification as a message. -->
@@ -5961,13 +6259,13 @@
     <!-- Text shown next to toggle switch to enable/disable schedule -->
     <string name="EditNotificationProfileSchedule__schedule">Harmonogram</string>
     <!-- Label for showing the start time for the schedule -->
-    <string name="EditNotificationProfileSchedule__start">Rozpocznij</string>
+    <string name="EditNotificationProfileSchedule__start">Początek</string>
     <!-- Label for showing the end time for the schedule -->
     <string name="EditNotificationProfileSchedule__end">Koniec</string>
     <!-- First letter of Sunday -->
-    <string name="EditNotificationProfileSchedule__sunday_first_letter">Ndz</string>
+    <string name="EditNotificationProfileSchedule__sunday_first_letter">Nd</string>
     <!-- First letter of Monday -->
-    <string name="EditNotificationProfileSchedule__monday_first_letter">Pon</string>
+    <string name="EditNotificationProfileSchedule__monday_first_letter">Pn</string>
     <!-- First letter of Tuesday -->
     <string name="EditNotificationProfileSchedule__tuesday_first_letter">Wt</string>
     <!-- First letter of Wednesday -->
@@ -5977,7 +6275,7 @@
     <!-- First letter of Friday -->
     <string name="EditNotificationProfileSchedule__friday_first_letter">Pt</string>
     <!-- First letter of Saturday -->
-    <string name="EditNotificationProfileSchedule__saturday_first_letter">Sob</string>
+    <string name="EditNotificationProfileSchedule__saturday_first_letter">Sb</string>
     <!-- Title of select time dialog shown when setting start time for schedule -->
     <string name="EditNotificationProfileSchedule__set_start_time">Ustaw czas rozpoczęcia</string>
     <!-- Title of select time dialog shown when setting end time for schedule -->
@@ -6135,6 +6433,8 @@
         <item quantity="many">%1$d odpowiedzi</item>
         <item quantity="other">%1$d odpowiedzi</item>
     </plurals>
+    <!-- Toast / Snackbar label when unhiding a story during viewer -->
+    <string name="StoryViewerPageFragment__story_no_longer_hidden">Relacja nie jest już ukryta</string>
     <!-- Label on group stories to add a story -->
     <string name="StoryViewerPageFragment__add">Dodaj</string>
     <!-- Used when view receipts are disabled -->
@@ -7144,7 +7444,7 @@
     <!-- Option to open a full screen dialog to edit a call name -->
     <string name="CreateCallLinkBottomSheetDialogFragment__edit_call_name">Edytuj nazwę połączenia</string>
     <!-- Toggle to require approval for all members before joining -->
-    <string name="CreateCallLinkBottomSheetDialogFragment__approve_all_members">Zatwierdź wszystkich członków</string>
+    <string name="CreateCallLinkBottomSheetDialogFragment__require_admin_approval">Wymagaj potwierdzenia administratora</string>
     <!-- Row label to share the link via Signal -->
     <string name="CreateCallLinkBottomSheetDialogFragment__share_link_via_signal">Udostępnij link za pomocą Signal</string>
     <!-- Row label to copy the link to the clipboard -->
@@ -7200,7 +7500,7 @@
     <!-- Displayed in a text row, allowing the user to click and add a call name -->
     <string name="CallLinkDetailsFragment__add_call_name">Dodaj nazwę połączenia</string>
     <!-- Displayed in a toggle row, allowing the user to click to enable or disable member approval -->
-    <string name="CallLinkDetailsFragment__approve_all_members">Zatwierdź wszystkich członków</string>
+    <string name="CallLinkDetailsFragment__require_admin_approval">Wymagaj potwierdzenia administratora</string>
     <!-- Displayed in a text row, allowing the user to share the call link -->
     <string name="CallLinkDetailsFragment__share_link">Udostępnij link</string>
     <!-- Displayed in a text row, allowing the user to delete the call link -->
@@ -7418,13 +7718,13 @@
 
     <!-- BackupAlertBottomSheet -->
     <!-- Sheet title when media backups have been disabled -->
-    <string name="BackupAlertBottomSheet__media_backups_are_off">Tworzenie kopii zapasowych multimediów jest wyłączone</string>
+    <string name="BackupAlertBottomSheet__your_backups_subscription_expired">Twoja usługa tworzenia kopii zapasowych wygasła</string>
     <!-- Sheet body part 1 when media backups have been disabled. Placeholder is the number of days until deletion. -->
-    <plurals name="BackupAlertBottomSheet__your_signal_media_backup_plan">
-        <item quantity="one">Usługa tworzenia kopii zapasowych multimediów w Signal została wyłączona, ponieważ nie mogliśmy przetworzyć Twojej płatności. Masz %1$d dzień na pobranie wszystkich multimediów zapisanych w kopii zapasowej. Po upływie %1$d dnia multimedia z kopii zapasowej zostaną usunięte.</item>
-        <item quantity="few">Usługa tworzenia kopii zapasowych multimediów w Signal została wyłączona, ponieważ nie mogliśmy przetworzyć Twojej płatności. Masz %1$d dni na pobranie wszystkich multimediów zapisanych w kopii zapasowej. Po upływie %1$d dni multimedia z kopii zapasowej zostaną usunięte.</item>
-        <item quantity="many">Usługa tworzenia kopii zapasowych multimediów w Signal została wyłączona, ponieważ nie mogliśmy przetworzyć Twojej płatności. Masz %1$d dni na pobranie wszystkich multimediów zapisanych w kopii zapasowej. Po upływie %1$d dni multimedia z kopii zapasowej zostaną usunięte.</item>
-        <item quantity="other">Usługa tworzenia kopii zapasowych multimediów w Signal została wyłączona, ponieważ nie mogliśmy przetworzyć Twojej płatności. Masz %1$d dnia na pobranie wszystkich multimediów zapisanych w kopii zapasowej. Po upływie %1$d dnia multimedia z kopii zapasowej zostaną usunięte.</item>
+    <plurals name="BackupAlertBottomSheet__your_backup_plan_has_expired">
+        <item quantity="one">Usługa tworzenia kopii zapasowych wygasła, ponieważ nie mogliśmy jej odnowić za pomocą Twojej bieżącej metody płatności. Po upływie %1$d dnia multimedia z kopii zapasowej zostaną usunięte.</item>
+        <item quantity="few">Usługa tworzenia kopii zapasowych wygasła, ponieważ nie mogliśmy jej odnowić za pomocą Twojej bieżącej metody płatności. Po upływie %1$d dni multimedia z kopii zapasowej zostaną usunięte.</item>
+        <item quantity="many">Usługa tworzenia kopii zapasowych wygasła, ponieważ nie mogliśmy jej odnowić za pomocą Twojej bieżącej metody płatności. Po upływie %1$d dni multimedia z kopii zapasowej zostaną usunięte.</item>
+        <item quantity="other">Usługa tworzenia kopii zapasowych wygasła, ponieważ nie mogliśmy jej odnowić za pomocą Twojej bieżącej metody płatności. Po upływie %1$d dnia multimedia z kopii zapasowej zostaną usunięte.</item>
     </plurals>
     <!-- Sheet body part 2 when media backups have been disabled. -->
     <string name="BackupAlertBottomSheet__you_can_begin_paying_for_backups_again">W dowolnym momencie możesz wznowić uiszczanie opłaty za dalsze tworzenie kopii zapasowych wszystkich multimediów. </string>
@@ -7435,7 +7735,7 @@
     <!-- Sheet title when user does not have enough space to download their backup -->
     <string name="BackupAlertBottomSheet__cant_complete_download">Nie można ukończyć pobierania</string>
     <!-- Sheet body part 1 when user does not have enough space to download their backup. Placeholder is the amount of space needed. -->
-    <string name="BackupAlertBottomSheet__your_device_does_not_have_enough_free_space">Your device does not have enough free space. Free up %1$s of space to download the media stored in your backup.</string>
+    <string name="BackupAlertBottomSheet__your_device_does_not_have_enough_free_space">Na Twoim urządzeniu nie ma wystarczającej ilości wolnego miejsca. Aby pobrać multimedia zapisane w kopii zapasowej, zwolnij %1$s.</string>
     <!-- Sheet body part 2 when user does not have enough space to download their backup. Placeholder is the number of days until deletion -->
     <plurals name="BackupAlertBottomSheet__if_you_choose_skip">
         <item quantity="one">Jeśli wybierzesz opcję „Pomiń”, multimedia z kopii zapasowej zostaną usunięte w ciągu %1$d dnia.</item>
@@ -7444,9 +7744,9 @@
         <item quantity="other">Jeśli wybierzesz opcję „Pomiń”, multimedia z kopii zapasowej zostaną usunięte w ciągu %1$d dnia.</item>
     </plurals>
     <!-- Sheet title when user payment failed to process -->
-    <string name="BackupAlertBottomSheet__cant_process_backup_payment">Nie można przetworzyć płatności za tworzenie kopii zapasowych</string>
+    <string name="BackupAlertBottomSheet__your_backups_subscription_failed_to_renew">Nie udało się odnowić usługi kopii zapasowych</string>
     <!-- Sheet body when user payment failed to process -->
-    <string name="BackupAlertBottomSheet__were_having_trouble_collecting__google_pay">Mamy problem z pobraniem cyklicznej comiesięcznej opłaty za tworzenie kopii zapasowych. Upewnij się, że dane dotyczące Twojej wybranej metody płatności są aktualne. Jeśli nie są, uaktualnij je w Google Pay. Za kilka dni podejmiemy kolejną próbę przetworzenia płatności.</string>
+    <string name="BackupAlertBottomSheet__check_to_make_sure_your_payment_method">Upewnij się, że dane dotyczące Twojej wybranej metody płatności są aktualne. Kliknij Zarządzaj subskrypcją, a w sekcji Metody płatności kliknij Aktualizuj.</string>
     <!-- Sheet title for generic backup error -->
     <string name="BackupAlertBottomSheet__couldnt_complete_backup">Nie udało się ukończyć tworzenia kopii zapasowej</string>
     <!-- Sheet body for generic backup error. Placeholder is days since last backup. -->
@@ -7455,18 +7755,59 @@
     <string name="BackupAlertBottomSheet__learn_more">Dowiedz się więcej</string>
     <!-- Secondary action button text when user does not have enough free space to download their backup. -->
     <string name="BackupAlertBottomSheet__skip">Pomiń</string>
+    <!-- Primary action button to manage subscription in Google Play -->
+    <string name="BackupAlertBottomSheet__manage_subscription">Zarządzaj subskrypcją</string>
+    <!-- Primary action button text prompting user to subscriber. Placeholder is formatted price -->
+    <string name="BackupAlertBottomSheet__subscribe_for_s_month">Subskrybuj usługę za %1$s/mies.</string>
     <!-- Primary action button text prompting user to download their media -->
     <string name="BackupAlertBottomSheet__download_media_now">Pobierz multimedia teraz</string>
-    <!-- Secondary action button text to dismiss sheet, noting the user can download later -->
-    <string name="BackupAlertBottomSheet__download_later">Pobierz później</string>
     <!-- Secondary action button text to dismiss sheet, skipping media download -->
     <string name="BackupAlertBottomSheet__dont_download_media">Nie pobieraj multimediów</string>
+    <!-- Secondary generic action button to dismiss sheet without performing an action -->
+    <string name="BackupAlertBottomSheet__not_now">Nie teraz</string>
+    <!-- Dialog title for last chance to download backup -->
+    <string name="BackupAlertBottomSheet__media_will_be_deleted">Multimedia zostaną usunięte</string>
+    <!-- Dialog message for last chance to download backup -->
+    <string name="BackupAlertBottomSheet__the_media_stored_in_your_backup">Multimedia przechowywane w kopii zapasowej zostaną dziś trwale usunięte. To Twoja ostatnia szansa na ich pobranie.</string>
+    <!-- Dialog action to download now -->
+    <string name="BackupAlertBottomSheet__download">Pobierz</string>
+    <!-- Dialog action to not download now -->
+    <string name="BackupAlertBottomSheet__dont_download">Nie pobieraj</string>
 
     <!-- BackupStatus -->
     <!-- Status title when user does not have enough free space to download their media. Placeholder is required disk space. -->
-    <string name="BackupStatus__free_up_s_of_space_to_download_your_media">Aby pobrać multimedia, zwolnij %1$s miejsca.</string>
+    <string name="BackupStatus__free_up_s_of_space_to_download_your_media">Aby przywrócić multimedia, zwolnij %1$s miejsca.</string>
+    <!-- Status title for banner when user is actively restoring media from a backup -->
+    <string name="BackupStatus__restoring_media">Przywracanie multimediów</string>
+    <!-- Status title for banner when user has paused restore media from a backup -->
+    <string name="BackupStatus__restore_paused">Przywracanie wstrzymane</string>
+    <!-- Status title for banner when user has completed restoring restore media from a backup -->
+    <string name="BackupStatus__restore_complete">Przywracanie zakończone</string>
+
+    <!-- Status subtitle for banner when restoring media pauses for Wi-Fi -->
+    <string name="BackupStatus__status_waiting_for_wifi">Czekamy na Wi-Fi…</string>
+    <!-- Status subtitle for banner when restoring media pauses for internet in general -->
+    <string name="BackupStatus__status_no_internet">Brak internetu…</string>
+    <!-- Status subtitle for banner when restoring media pauses for low battery -->
+    <string name="BackupStatus__status_device_has_low_battery">Urządzenie ma słabą baterię</string>
+    <!-- Status subtitle for banner when restoring media. Placeholders are size already restored and total size to restore. e.g., 4.5MB of 100MB -->
+    <string name="BackupStatus__status_size_of_size">%1$s z %2$s</string>
+
+    <!-- BackupStatusRow -->
+    <!-- Content description for x icon at the end of the linear progress indicator -->
+    <string name="BackupStatusRow__cancel_download">Anuluj pobieranie</string>
+    <!-- Backup progress. Placeholders are size restored, size to restore, and percent, i.e. 50MB of 100MB (50%) -->
+    <string name="BackupStatusRow__downloading_s_of_s_s">Trwa pobieranie: %1$s z %2$s (%3$s%%)</string>
+    <!-- Notice that there is not enough free space to continue restore. Placeholder is required space, for example 1.6GB -->
+    <string name="BackupStatusRow__not_enough_space">Za mało miejsca, aby pobrać kopię zapasową. Aby kontynuować, zwolnij %1$s miejsca.</string>
+    <!-- Text row label to skip download -->
+    <string name="BackupStatusRow__skip_download">Pomiń pobieranie</string>
+    <!-- Text displayed when a backup could not be completed -->
+    <string name="BackupStatusRow__your_last_backup">"Nie udało się ukończyć tworzenia ostatniej kopii zapasowej. Upewnij się, że urządzenie jest podłączone do Wi-Fi, i ponownie wybierz opcję Utwórz kopię zapasową teraz."</string>
 
     <!-- BackupsTypeSettingsFragment -->
+    <!-- Displayed as the user\'s payment method as a label in a preference row -->
+    <string name="BackupsTypeSettingsFragment__google_play">Google Play</string>
     <!-- Displayed as the user\'s payment method as a label in a preference row -->
     <string name="BackupsTypeSettingsFragment__credit_or_debit_card">Karta kredytowa lub debetowa</string>
     <!-- Displayed as the user\'s payment method as a label in a preference row -->
@@ -7484,7 +7825,7 @@
     <!-- Row description detailing renewal information. First placeholder is formatted price. Second placeholder is formatted date. -->
     <string name="BackupsTypeSettingsFragment__s_month_renews_s">%1$s/miesiąc · Przedłużane %2$s</string>
     <!-- Row title to change or cancel subscription -->
-    <string name="BackupsTypeSettingsFragment__change_or_cancel_subscription">Change or cancel subscription</string>
+    <string name="BackupsTypeSettingsFragment__change_or_cancel_subscription">Zmień lub anuluj subskrypcję</string>
 
     <!-- RemoteRestoreActivity -->
     <!-- Displayed at restore time to tell the user when their last backup was made. %$1s is replaced with the date (e.g. March 5, 2024) and %$2s is replaced with the time (e.g. 9:00am) -->
@@ -7503,6 +7844,33 @@
     <string name="ManageStorageSettingsFragment_apply_limits_title">Zastosuj limity do powiązanych urządzeń</string>
     <!-- Setting description for syncing automated chat limit trimming (deleting messages automatically by length or date) to linked devices -->
     <string name="ManageStorageSettingsFragment_apply_limits_description">Po włączeniu limity czatu będą również usuwać wiadomości z powiązanych urządzeń.</string>
+    <!-- Setting section title header for storage optimization -->
+    <string name="ManageStorageSettingsFragment__on_device_storage">Pamięć masowa na urządzeniu</string>
+    <!-- Setting row title for storage optimization -->
+    <string name="ManageStorageSettingsFragment__optimize_on_device_storage">Zoptymalizuj pamięć masową na urządzeniu</string>
+    <!-- Setting row explanation for storage optimization -->
+    <string name="ManageStorageSettingsFragment__unused_media_will_be_offloaded">Nieużywane multimedia zostaną usunięte, ale w dowolnym momencie można je będzie pobrać z kopii zapasowej.</string>
+
+    <!-- UpgradeToEnableOptimizedStorageSheet -->
+    <!-- Title on a bottom sheet, detailing that the user must upgrade to enable storage optimization -->
+    <string name="UpgradeToEnableOptimizedStorageSheet__upgrade_to_enable_this_feature">Ulepsz wersję, aby włączyć tę funkcję</string>
+    <!-- Subtitle of bottom sheet detailing that the user must upgrade to enable storage optimization -->
+    <string name="UpgradeToEnableOptimizedStorageSheet__storage_optimization_can_only_be_used">Optymalizacja pamięci masowej dostępna jest tylko po wykupieniu płatnego trybu tworzenia kopii zapasowych Signal. Aby móc korzystać z tej funkcji, wykup płatny tryb tworzenia kopii zapasowej.</string>
+    <!-- Primary action to launch upgrade flow. Placeholder is formatted price. -->
+    <string name="UpgradeToEnableOptimizedStorageSheet__subscribe_for_s_month">Subskrybuj usługę za %1$s/mies.</string>
+
+    <!-- UpgradeToStartMediaBackupSheet -->
+    <!-- Title on a bottom sheet, detailing that in order to start backing up media, they need to upgrade to paid backup storage -->
+    <string name="UpgradeToStartMediaBackupSheet__this_media_is_no_longer_available">Te multimedia nie są już dostępne.</string>
+    <!-- Subtitle of bottom sheet detailing that with their current plan, there is a limitation to how many days media is stored for. Placeholder is number of days. -->
+    <plurals name="UpgradeToStartMediaBackupSheet__your_current_signal_backup_plan_includes">
+        <item quantity="one">W ramach Twojej bieżącej usługi masz utworzoną kopię zapasową Signal multimediów z ostatniego %1$d dnia. Aby rozpocząć tworzenie kopii zapasowych wszystkich multimediów, wykup usługę.</item>
+        <item quantity="few">W ramach Twojej bieżącej usługi masz utworzoną kopię zapasową Signal multimediów z ostatnich %1$d dni. Aby rozpocząć tworzenie kopii zapasowych wszystkich multimediów, wykup usługę.</item>
+        <item quantity="many">W ramach Twojej bieżącej usługi masz utworzoną kopię zapasową Signal multimediów z ostatnich %1$d dni. Aby rozpocząć tworzenie kopii zapasowych wszystkich multimediów, wykup usługę.</item>
+        <item quantity="other">W ramach Twojej bieżącej usługi masz utworzoną kopię zapasową Signal multimediów z ostatnich %1$d dni. Aby rozpocząć tworzenie kopii zapasowych wszystkich multimediów, wykup usługę.</item>
+    </plurals>
+    <!-- Primary action to launch upgrade flow. Placeholder is formatted price. -->
+    <string name="UpgradeToStartMediaBackupSheet__subscribe_for_s_month">Subskrybuj usługę za %1$s/mies.</string>
 
     <!-- Educational bottom sheet dialog title shown to notify about delete syncs causing deletes to happen across all devices -->
     <string name="DeleteSyncEducation_title">Usuwanie jest teraz synchronizowane na wszystkich Twoich urządzeniach</string>
@@ -7511,19 +7879,15 @@
     <!-- Educational bottom sheet confirm/dismiss button text shown to notify about delete syncs causing deletes to happen across all devices -->
     <string name="DeleteSyncEducation_acknowledge_button">OK</string>
 
-    <!-- RemoteBackupsPaymentHistoryFragment -->
-    <!-- Title of the screen for payment history -->
-    <string name="RemoteBackupsPaymentHistoryFragment__payment_history">Historia płatności</string>
-    <!-- Description for backup rows -->
-    <string name="RemoteBackupsPaymentHistoryFragment__text_and_all_media_backup">Kopia zapasowa wiadomości tekstowych i wszystkich multimediów</string>
-    <!-- Title of the screen for payment details -->
-    <string name="RemoteBackupsPaymentHistoryFragment__payment_details">Szczegóły płatności</string>
-    <!-- Title of row specifying the type of backup -->
-    <string name="RemoteBackupsPaymentHistoryFragment__backup_type">Typ kopii zapasowej</string>
-    <!-- Title of row specifying the date the backup was paid on -->
-    <string name="RemoteBackupsPaymentHistoryFragment__date_paid">Data zapłaty</string>
-    <!-- Button label to share the receipt -->
-    <string name="RemoteBackupsPaymentHistoryFragment__share">Udostępnij</string>
+    <!-- BackupsSettingsFragment -->
+    <!-- Subtitle for row for active backup, first placeholder is formatted amount, second is renewal date -->
+    <string name="BackupsSettingsFragment_s_month_renews_s">%1$s/miesiąc · Przedłużane %2$s</string>
+    <!-- Subtitle for row for active backup, placeholder is last date of backup -->
+    <string name="BackupsSettingsFragment_last_backup_s">Ostatnia kopia zapasowa: %1$s</string>
+    <!-- Subtitle for row for no backup ever created -->
+    <string name="BackupsSettingsFragment_automatic_backups_with_signals">Automatyczne tworzenie kopii zapasowych w bezpiecznej, w pełni szyfrowanej usłudze przechowywania danych Signal.</string>
+    <!-- Action button label to set up backups -->
+    <string name="BackupsSettingsFragment_set_up">Ustaw</string>
 
     <!-- RemoteBackupsSettingsFragment -->
     <!-- Displayed on the title bar -->
@@ -7538,6 +7902,10 @@
     <string name="RemoteBackupsSettingsFragment__backup_frequency">Częstotliwość tworzenia kopii zapasowych</string>
     <!-- Toggle row label for allowing backups to occur while on cellular connection -->
     <string name="RemoteBackupsSettingsFragment__back_up_using_cellular">Tworzenie kopii zapasowej przy użyciu sieci komórkowej</string>
+    <!-- Row label for viewing backup key -->
+    <string name="RemoteBackupsSettingsFragment__view_backup_key">Wyświetl kod kopii zapasowej</string>
+    <!-- Prompt title for unlocking device to view backup key -->
+    <string name="RemoteBackupsSettingsFragment__unlock_to_view_backup_key">Odblokuj, aby wyświetlić kod kopii zapasowej</string>
     <!-- Row label for cancelling and deleting backup -->
     <string name="RemoteBackupsSettingsFragment__turn_off_and_delete_backup">Usuń kopie zapasowe i wyłącz tworzenie kolejnych</string>
     <!-- Snackbar text displayed when backup has been deleted and turned off -->
@@ -7548,14 +7916,42 @@
     <string name="RemoteBackupsSettingsFragment__subscription_cancelled">Subskrypcja anulowana</string>
     <!-- Snackbar text displayed when backup is successfully downloaded -->
     <string name="RemoteBackupsSettingsFragment__download_complete">Pobieranie ukończone</string>
+    <!-- Snackbar text displayed when backup will be created overnight -->
+    <string name="RemoteBackupsSettingsFragment__backup_will_be_created_overnight">Kopia zapasowa będzie tworzona codziennie w nocy.</string>
+    <!-- Text displayed in card when subscription is inactive -->
+    <string name="RemoteBackupsSettingsFragment__subscription_inactive">Subskrypcja nieaktywna</string>
+    <!-- Text displayed in card when free tier is inactive -->
+    <string name="RemoteBackupsSettingsFragment__you_turned_off_backups">Wyłączono tworzenie kopii zapasowych</string>
     <!-- Title text in row detailing selected backup type -->
-    <string name="RemoteBackupsSettingsFragment__backup_type">Typ kopii zapasowej</string>
+    <string name="RemoteBackupsSettingsFragment__backup_plan">Tryb tworzenia kopii zapasowej</string>
     <!-- Subtitle text in row detailing selected backup type displayed when backups are disabled -->
     <string name="RemoteBackupsSettingsFragment__backups_disabled">Kopie zapasowe wyłączone</string>
-    <!-- Format string for backup and cost. First placeholder is backup title, second is cost per month. -->
-    <string name="RemoteBackupsSettingsFragment__s_dot_s_per_month">%1$s · %2$s/miesiąc</string>
-    <!-- Button label to enable backups -->
-    <string name="RemoteBackupsSettingsFragment__enable_backups">Włącz kopie zapasowe</string>
+    <!-- Format string for backup and cost. First placeholder is cost per month. -->
+    <string name="RemoteBackupsSettingsFragment__s_per_month">%1$s/miesiąc</string>
+    <!-- Displayed in card at top of screen while payment processing is pending -->
+    <string name="RemoteBackupsSettingsFragment__payment_pending">Przetwarzanie płatności…</string>
+    <!-- Displayed in card while waiting for network -->
+    <string name="RemoteBackupsSettingsFragment__waiting_for_network">Oczekiwanie na sieć…</string>
+    <!-- String for free backups -->
+    <string name="RemoteBackupsSettingsFragment__your_backup_plan_is_free">Korzystasz z bezpłatnego trybu tworzenia kopii zapasowej</string>
+    <!-- Displays the date the subscription will renew. Placeholder is the date. -->
+    <string name="RemoteBackupsSettingsFragment__renews_s">Przedłużane %1$s</string>
+    <!-- Displays the date the subscription will expire. Placeholder is the date. -->
+    <string name="RemoteBackupsSettingsFragment__expires_on_s">Wygasa %1$s</string>
+    <!-- Displays the date the subscription expired. Placeholder is the date. -->
+    <string name="RemoteBackupsSettingsFragment__expired_on_s">Wygasła %1$s</string>
+    <!-- Displayed at the top of the screen when no backup is currently enabled -->
+    <string name="RemoteBackupsSettingsFragment__back_up_your_message_history">Twórz kopie zapasowe swoich wiadomości, a nie stracisz ich nawet po zmianie telefonu czy ponownej instalacji Signal.</string>
+    <!-- Section header for other ways to back up -->
+    <string name="RemoteBackupsSettingsFragment__other_ways_to_backup">Inne metody tworzenia kopii zapasowych</string>
+    <!-- Row title for performing on-device backup -->
+    <string name="RemoteBackupsSettingsFragment__on_device_backups">Kopie zapasowe na urządzeniu</string>
+    <!-- Row label for performing on-device backup -->
+    <string name="RemoteBackupsSettingsFragment__save_your_backups_to">Zapisuj kopie zapasowe w folderze na tym urządzeniu</string>
+    <!-- Button label to manage or cancel backups -->
+    <string name="RemoteBackupsSettingsFragment__manage_or_cancel">Zarządzaj lub anuluj</string>
+    <!-- button label to upgrade backups -->
+    <string name="RemoteBackupsSettingsFragment__upgrade">Aktualizuj</string>
     <!-- Progress indicator subtext displayed when a backup is in progress -->
     <string name="RemoteBackupsSettingsFragment__d_slash_d">%1$d/%2$d</string>
     <!-- Title text in row detailing last backup -->
@@ -7588,54 +7984,64 @@
     <string name="RemoteBackupsSettingsFragment__manually_back_up">Ręczne tworzenie kopii zapasowej</string>
     <!-- The body of an alert dialog shown when we detect the user may be confused by the lock screen -->
     <string name="PassphrasePromptActivity_help_prompt_body">Wprowadź kod PIN urządzenia, hasło lub wzór.</string>
-
-    <!-- MessageBackupsCheckoutSheet -->
-    <!-- Sheet title. Placeholder is formatted price. -->
-    <string name="MessageBackupsCheckoutSheet__pay_s_per_month">Pay %1$s/month to Signal</string>
-    <!-- Sheet subtitle -->
-    <string name="MessageBackupsCheckoutSheet__youll_get">You\'ll get:</string>
+    <!-- Button label to re-enable backups (launches into checkout flow) -->
+    <string name="RemoteBackupsSettingsFragment__reenable_backups">Włącz ponownie</string>
+    <!-- Notice displayed when backups have been disabled and deleted -->
+    <string name="RemoteBackupsSettingsFragment__backups_have_been_turned_off">Tworzenie kopii zapasowych zostało wyłączone, a Twoje dane zostały usunięte z bezpiecznej usługi przechowywania Signal.</string>
+    <!-- Dialog title for dialog which alerts user their optimized media will be downloaded -->
+    <string name="RemoteBackupsSettingsFragment__downloading_your_backup">Trwa pobieranie kopii zapasowej</string>
+    <!-- Dialog message for dialog which alerts user their optimized media will be downloaded -->
+    <string name="RemoteBackupsSettingsFragment__depending_on_the_size">W przypadku dużej ilości danych proces tworzenia kopii zapasowej może zająć sporo czasu. Podczas pobierania możesz normalnie korzystać z telefonu.</string>
 
     <!-- MessageBackupsEducationScreen -->
     <!-- Screen subtitle underneath large headline title -->
-    <string name="MessageBackupsEducationScreen__backup_your_messages_and_media">Back up your messages and media and using Signal\'s secure, end-to-end encrypted storage service. Never lose a message when you get a new phone or reinstall Signal.</string>
+    <string name="MessageBackupsEducationScreen__backup_your_messages_and_media">Twórz kopie zapasowe swoich wiadomości i multimediów, korzystając z bezpiecznej, w pełni szyfrowanej usługi przechowywania danych Signal. Dzięki temu nie stracisz wiadomości nawet po zmianie telefonu czy ponownej instalacji Signal.</string>
     <!-- Backups feature label for e2e encryption -->
-    <string name="MessageBackupsEducationScreen__end_to_end_encrypted">End-to-end Encrypted</string>
+    <string name="MessageBackupsEducationScreen__end_to_end_encrypted">Szyfrowanie end-to-end</string>
     <!-- Backups feature label for informing the user that this feature is completely optional -->
-    <string name="MessageBackupsEducationScreen__optional_always">Optional, always</string>
+    <string name="MessageBackupsEducationScreen__optional_always">Dla chętnych (jak zwykle)</string>
     <!-- Backups feature label for informing the user that they can delete their backup at any time -->
-    <string name="MessageBackupsEducationScreen__delete_your_backup_anytime">Delete your backup anytime</string>
+    <string name="MessageBackupsEducationScreen__delete_your_backup_anytime">Możliwość usunięcia kopii zapasowej w dowolnym momencie</string>
     <!-- Action button label to proceed with backups activation -->
     <string name="MessageBackupsEducationScreen__enable_backups">Włącz kopie zapasowe</string>
     <!-- Action button label to learn more -->
     <string name="MessageBackupsEducationScreen__learn_more">Dowiedz się więcej</string>
 
-    <!-- MessageBackupsPinConfirmationScreen -->
-    <!-- Screen title -->
-    <string name="MessageBackupsPinConfirmationScreen__enter_your_pin">Wpisz swój PIN</string>
-    <!-- Screen subtitle -->
-    <string name="MessageBackupsPinConfirmationScreen__enter_your_signal_pin_to_enable_backups">Enter your Signal PIN to enable backups</string>
-    <!-- Action button to confirm pin entry and continue -->
-    <string name="MessageBackupsPinConfirmationScreen__next">Dalej</string>
-    <!-- Action button to switch keyboard type -->
-    <string name="MessageBackupsPinConfirmationScreen__switch_keyboard">Przełącz klawiaturę</string>
-
-    <!-- MessageBackupsPinEducationScreen -->
+    <!-- MessageBackupsKeyEducationScreen -->
     <!-- Screen headline -->
-    <string name="MessageBackupsPinEducationScreen__pins_protect_your_backup">PINs protect your backup</string>
-    <!-- Notice about pin length. Placeholder is recommended pin length -->
-    <string name="MessageBackupsPinEducationScreen__your_signal_pin_lets_you">Your Signal PIN lets you restore your backup when you re-install Signal. We recommend using a PIN that\'s at least %1$d digits.</string>
-    <!-- Notice about changing your pin. -->
-    <string name="MessageBackupsPinEducationScreen__if_you_forget_your_pin">If you forget your PIN, you will not be able to restore your backup. You can change your PIN at any time in settings.</string>
-    <!-- Action button label to utilize current pin -->
-    <string name="MessageBackupsPinEducationScreen__use_current_signal_pin">Use current Signal PIN</string>
-    <!-- Action button to create a new pin -->
-    <string name="MessageBackupsPinEducationScreen__create_new_pin">Utwórz nowy PIN</string>
+    <string name="MessageBackupsKeyEducationScreen__your_backup_key">Twój kod kopii zapasowej</string>
+    <!-- Screen body part 1 -->
+    <string name="MessageBackupsKeyEducationScreen__your_backup_key_is_a">Twój 64-cyfrowy kod kopii zapasowej umożliwi Ci przywrócenie kopii zapasowej po ponownej instalacji Signal.</string>
+    <!-- Screen body part 2 -->
+    <string name="MessageBackupsKeyEducationScreen__if_you_forget_your_key">Jeśli go zapomnisz, stracisz możliwość przywrócenia kopii zapasowej. Signal nie będzie mógł pomóc w odzyskaniu kopii zapasowej.</string>
+    <!-- Action button label -->
+    <string name="MessageBackupsKeyEducationScreen__next">Dalej</string>
+
+    <!-- MessageBackupsKeyRecordScreen -->
+    <!-- Screen headline -->
+    <string name="MessageBackupsKeyRecordScreen__record_your_backup_key">Zapisz kod kopii zapasowej</string>
+    <!-- Screen subhead -->
+    <string name="MessageBackupsKeyRecordScreen__this_key_is_required_to_recover">Ten kod będzie potrzebny do odzyskania konta i danych. Przechowuj go w bezpiecznym miejscu. Jeśli go zgubisz, stracisz możliwość przywrócenia konta.</string>
+    <!-- Copy to clipboard button label -->
+    <string name="MessageBackupsKeyRecordScreen__copy_to_clipboard">Skopiuj do schowka</string>
+    <!-- Action button label -->
+    <string name="MessageBackupsKeyRecordScreen__next">Dalej</string>
+    <!-- Bottom sheet title -->
+    <string name="MessageBackupsKeyRecordScreen__keep_your_key_safe">Zapisz kod w bezpiecznym miejscu</string>
+    <!-- Bottom sheet subtitle -->
+    <string name="MessageBackupsKeyRecordScreen__signal_will_not">Jeśli zgubisz kod, Signal nie będzie mógł Ci pomóc w przywróceniu kopii zapasowej. Przechowuj kod w bezpiecznym miejscu i nie udostępniaj innym osobom.</string>
+    <!-- Checkbox label -->
+    <string name="MessageBackupsKeyRecordScreen__ive_recorded_my_key">Kod zapisany</string>
+    <!-- Sheet action button label -->
+    <string name="MessageBackupsKeyRecordScreen__continue">Kontynuuj</string>
+    <!-- Sheet secondary action button label -->
+    <string name="MessageBackupsKeyRecordScreen__see_key_again">Wyświetl kod ponownie</string>
 
     <!-- MessagesBackupsTypeSelectionScreen -->
     <!-- Screen headline -->
-    <string name="MessagesBackupsTypeSelectionScreen__choose_your_backup_plan">Choose your backup plan</string>
+    <string name="MessagesBackupsTypeSelectionScreen__choose_your_backup_plan">Wybierz tryb tworzenia kopii zapasowych</string>
     <!-- Screen subhead -->
-    <string name="MessageBackupsTypeSelectionScreen__all_backups_are_end_to_end_encrypted">All backups are end-to-end encrypted. Signal is a non-profit—paying for backups helps support our mission.</string>
+    <string name="MessageBackupsTypeSelectionScreen__all_backups_are_end_to_end_encrypted">Wszystkie kopie zapasowe są szyfrowane metodą end-to-end. Signal jest organizacją non-profit — płacąc za tworzenie kopii zapasowych, wspierasz naszą misję.</string>
     <!-- Screen subhead highlighted read-more button -->
     <string name="MessageBackupsTypeSelectionScreen__read_more">Czytaj dalej</string>
     <!-- Primary action button label when selecting a backup tier without a current selection -->
@@ -7644,6 +8050,36 @@
     <string name="MessageBackupsTypeSelectionScreen__change_backup_type">Zmień typ kopii zapasowej</string>
     <!-- Secondary action button label when selecting a backup tier with a current selection -->
     <string name="MessageBackupsTypeSelectionScreen__cancel_subscription">Anuluj subskrypcję</string>
+    <!-- MessageBackupsType block amount for free tier -->
+    <string name="MessageBackupsTypeSelectionScreen__free">Za darmo</string>
+    <!-- MessageBackupsType block amount for paid tier. Placeholder is formatted currency amount. -->
+    <string name="MessageBackupsTypeSelectionScreen__s_month">%1$s/miesiąc</string>
+    <!-- Title for free tier -->
+    <string name="MessageBackupsTypeSelectionScreen__text_plus_all_your_media">Wiadomości tekstowe + wszystkie Twoje multimedia</string>
+    <!-- Title for paid tier. Placeholder is days of media retention. -->
+    <plurals name="MessageBackupsTypeSelectionScreen__text_plus_d_days_of_media">
+        <item quantity="one">Wiadomości tekstowe + %1$d dzień multimediów</item>
+        <item quantity="few">Wiadomości tekstowe + %1$d dni multimediów</item>
+        <item quantity="many">Wiadomości tekstowe + %1$d dni multimediów</item>
+        <item quantity="other">Wiadomości tekstowe + %1$d dni multimediów</item>
+    </plurals>
+    <!-- Description text for text history feature -->
+    <string name="MessageBackupsTypeSelectionScreen__full_text_message_backup">Pełna kopia zapasowa wiadomości tekstowych</string>
+    <!-- Description text for paid tier media retention -->
+    <string name="MessageBackupsTypeSelectionScreen__full_media_backup">Pełna kopia zapasowa multimediów</string>
+    <!-- Description text for storage space for paid tier media. Placeholder 1 is for byte amount, placeholder 2 is for a photo count estimate -->
+    <string name="MessageBackupsTypeSelectionScreen__s_of_storage_s_photos">%1$s pamięci (%2$s zdjęć)</string>
+    <!-- Description text for thanks -->
+    <string name="MessageBackupsTypeSelectionScreen__thanks_for_supporting_signal">Dziękujemy za wspieranie Signal!</string>
+    <!-- Description text for free tier media retention. Placeholder is retention day count. -->
+    <plurals name="MessageBackupsTypeSelectionScreen__last_d_days_of_media">
+        <item quantity="one">Ostatni %1$d dzień multimediów</item>
+        <item quantity="few">Ostatnie %1$d dni multimediów</item>
+        <item quantity="many">Ostatnie %1$d dni multimediów</item>
+        <item quantity="other">Ostatnie %1$d dni multimediów</item>
+    </plurals>
+    <!-- Text designating that an option is your current plan -->
+    <string name="MessageBackupsTypeSelectionScreen__current_plan">Aktualna usługa</string>
 
     <!-- ConfirmBackupCancellationDialog -->
     <!-- Dialog title -->
@@ -7656,5 +8092,8 @@
     <string name="ConfirmBackupCancellationDialog__confirm_and_download_later">Potwierdź i pobierz później</string>
     <!-- Action button label to keep current subscription -->
     <string name="ConfirmBackupCancellationDialog__keep_subscription">Zachowaj usługę</string>
+
+    <!-- Accessible content description for the reminder view, describing the icon in the view. -->
+    <string name="ReminderView_icon_content_description">Ikona przypomnienia</string>
     <!-- EOF -->
 </resources>

@@ -101,7 +101,7 @@ class SignalCallLinkManager(
         )
       } catch (e: Exception) {
         Log.e(TAG, "Failed to create call link credential.", e)
-        emitter.onError(e)
+        emitter.onSuccess(CreateCallLinkResult.Failure(-1))
         return@create
       }
 
@@ -115,7 +115,8 @@ class SignalCallLinkManager(
         credentialPresentation.serialize(),
         rootKey,
         adminPassKey,
-        publicParams.serialize()
+        publicParams.serialize(),
+        Restrictions.ADMIN_APPROVAL
       ) { result ->
         if (result.isSuccess) {
           Log.d(TAG, "Successfully created call link.")
